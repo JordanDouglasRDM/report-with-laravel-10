@@ -7,8 +7,6 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
-                'resousces/css/tailwind.css',
-                'resousces/css/bootstrap.css',
             ],
             refresh: true,
         }),
