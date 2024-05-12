@@ -4,6 +4,10 @@
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 import dropdown from "bootstrap/js/src/dropdown.js";
+
+import Swal from 'sweetalert2';
+window.Swal = Swal;
+
 import axios from 'axios';
 window.axios = axios;
 

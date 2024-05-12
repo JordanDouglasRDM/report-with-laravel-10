@@ -14,6 +14,13 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+<div class="modal fade" id="my-modal-loading" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="container">
+            <span class="loader meu-loader"></span>
+        </div>
+    </div>
+</div>
 <body class="tw-font-sans tw-antialiased" data-bs-theme="dark">
 <div class="tw-min-h-screen tw-bg-gray-100 dark:tw-bg-gray-900">
     @include('layouts.navigation')

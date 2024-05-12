@@ -1,4 +1,12 @@
 @import "bootstrap.css";
+@import "loader.css";
+@import "user-page.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.table-wrapper {
+    height: 500px;
+    overflow:auto;
+}
