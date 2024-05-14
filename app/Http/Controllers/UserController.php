@@ -121,7 +121,7 @@ class UserController extends Controller
             $data = $request->validated();
 
             if (auth()->user()->id == $userId) {
-                if (isset($data['level'])) {
+                if (isset($data['level']) && auth()->user()->level != $data['level']) {
                     throw new \Exception('Você não pode alterar seu próprio nível de acesso.');
                 }
             }

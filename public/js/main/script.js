@@ -1,3 +1,4 @@
+const toast = initializeToast();
 window.loading  = function () {
     const modalFind = document.getElementById('my-modal-loading');
     return new bootstrap.Modal(modalFind, {
@@ -29,7 +30,6 @@ window.handleErrorsResponse = function (errorAxios) {
             }
         }
     }
-    const toast = initializeToast()
     toast.fire({
         icon: "error",
         title: message,
