@@ -27,23 +27,33 @@ class UserController extends Controller
 
     public function getAll(GetAllUserRequest $request)
     {
-        $data = $request->validated();
-        $users = $this->user->query(); // Inicialize a consulta aqui
+        try {
+            $data = $request->validated();
+            $users = $this->user->query(); // Inicialize a consulta aqui
 
-        if (isset($data['filter-search'])) {
-            $users->where(function ($query) use ($data) {
-                $query->where('name', 'like', '%' . $data['filter-search'] . '%')
-                    ->orWhere('email', 'like', '%' . $data['filter-search'] . '%')
-                    ->orWhere('phone_number', 'like', '%' . $data['filter-search'] . '%')
-                    ->orWhere('level', 'like', '%' . $data['filter-search'] . '%');
-            });
+            if (isset($data['filter-search'])) {
+                $users->where(function ($query) use ($data) {
+                    $query->where('name', 'like', '%' . $data['filter-search'] . '%')
+                        ->orWhere('email', 'like', '%' . $data['filter-search'] . '%')
+                        ->orWhere('phone_number', 'like', '%' . $data['filter-search'] . '%')
+                        ->orWhere('level', 'like', '%' . $data['filter-search'] . '%');
+                });
+            }
+            $users = $users->paginate($data['per_page'] ?? 10);
+
+            return response()->json([
+                'status' => 200,
+                'data' => $users,
+                'message' => 'Registros encontados.'
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Erro interno do servidor',
+                'error' => $e->getMessage()
+            ], 500);
         }
-        $users = $users->paginate($data['per_page'] ?? 10);
-
-        return response()->json([
-            'data' => $users,
-            'message' => 'Usuários encontrados com sucesso!'
-        ], 200);
     }
 
 
@@ -107,8 +117,8 @@ class UserController extends Controller
             $data = $request->validated();
 
             if (auth()->user()->id == $userId) {
-                if(isset($data['level'])) {
-                  throw new \Exception('Você não pode alterar seu próprio nível de acesso.');
+                if (isset($data['level'])) {
+                    throw new \Exception('Você não pode alterar seu próprio nível de acesso.');
                 }
             }
 
