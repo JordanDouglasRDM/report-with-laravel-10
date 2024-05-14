@@ -13,9 +13,21 @@ document.addEventListener('DOMContentLoaded', function () {
             toast.onmouseleave = Swal.resumeTimer;
         }
     });
+
     perPage();
     getAllUser();
     clearFilters();
+    searchData();
+
+    function searchData() {
+        const searchButton = document.getElementById('form-search_button');
+        searchButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            const searchInput = document.getElementById('form-search_input');
+            getAllUser({ filter_search: searchInput.value });
+        });
+    }
+
     function clearFilters() {
         const btnFilter = document.getElementById("clear-filters");
         btnFilter.addEventListener("click", (event) => {
@@ -24,13 +36,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-
     function perPage() {
         const dropDownItems = document.querySelectorAll('.dropdown-item');
         dropDownItems.forEach((item) => {
             item.addEventListener('click', (event) => {
                 event.preventDefault();
-                getAllUser({per_page: item.innerText});
+                getAllUser({ per_page: item.innerText });
             });
         });
     }
@@ -70,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
             tableBody.appendChild(tr);
         });
 
-        prepareEventClickOpenModal(); // Chame aqui para definir os eventos de clique nos botões de edição
+        prepareEventClickOpenModal();
     }
 
     async function prepareEventClickOpenModal() {
@@ -141,12 +152,17 @@ document.addEventListener('DOMContentLoaded', function () {
         );
     }
 
-    function prepareEventClickSubmitFormChanges(userId) {
-        document.getElementById('submit-form').addEventListener('click', async (event) => {
+    async function prepareEventClickSubmitFormChanges(userId) {
+        const submitButton = document.getElementById('submit-form');
+        const newSubmitHandler = async (event) => {
             event.preventDefault();
             const user = getDataUserChanged();
             await updateUserById(user, userId);
-        });
+        };
+
+        // Remove os ouvintes de evento anteriores
+        submitButton.replaceWith(submitButton.cloneNode(true));
+        document.getElementById('submit-form').addEventListener('click', newSubmitHandler);
     }
 
     function getDataUserChanged() {
@@ -165,6 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function updateUserById(request, userId) {
         try {
+            console.log('update ' + userId);
             const response = await axios.put('user/' + userId, request);
             modalUser.hide();
 
@@ -178,9 +195,9 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
         } catch (error) {
-            const message = error.response.data.message;
-            const errorCode = error.response.data.status;
-            let errors = error.response.data.error;
+            const message = error.response?.data?.message || 'Erro desconhecido';
+            const errorCode = error.response?.data?.status || 500;
+            let errors = error.response?.data?.error || 'Erro desconhecido';
 
             if (errorCode === 422) {
                 const errorObject = error.response.data.error;
@@ -212,9 +229,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const response = await axios.get('/user/' + id);
             return response.data.data;
         } catch (error) {
-            const title = error.response.data.message;
-            const errorMessage = error.response.data.error;
-            const errorCode = error.response.status;
+            const title = error.response?.data?.message || 'Erro desconhecido';
+            const errorMessage = error.response?.data?.error || 'Erro desconhecido';
+            const errorCode = error.response?.status || 500;
 
             await toast.fire({
                 icon: "error",

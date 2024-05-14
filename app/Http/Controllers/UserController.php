@@ -31,12 +31,12 @@ class UserController extends Controller
             $data = $request->validated();
             $users = $this->user->query(); // Inicialize a consulta aqui
 
-            if (isset($data['filter-search'])) {
+            if (isset($data['filter_search'])) {
                 $users->where(function ($query) use ($data) {
-                    $query->where('name', 'like', '%' . $data['filter-search'] . '%')
-                        ->orWhere('email', 'like', '%' . $data['filter-search'] . '%')
-                        ->orWhere('phone_number', 'like', '%' . $data['filter-search'] . '%')
-                        ->orWhere('level', 'like', '%' . $data['filter-search'] . '%');
+                    $query->where('name', 'like', '%' . $data['filter_search'] . '%')
+                        ->orWhere('email', 'like', '%' . $data['filter_search'] . '%')
+                        ->orWhere('phone_number', 'like', '%' . $data['filter_search'] . '%')
+                        ->orWhere('level', 'like', '%' . $data['filter_search'] . '%');
                 });
             }
             $users = $users->paginate($data['per_page'] ?? 10);
