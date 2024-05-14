@@ -9,14 +9,21 @@
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet"/>
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @yield('scripts-before')
+    @yield('scripts')
 </head>
 
 <body class="tw-font-sans tw-antialiased" data-bs-theme="dark">
+<div class="modal fade" id="my-modal-loading" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="container">
+            <span class="loader meu-loader"></span>
+        </div>
+    </div>
+</div>
 <div class="tw-min-h-screen tw-bg-gray-100 dark:tw-bg-gray-900">
     @include('layouts.navigation')
 
@@ -34,6 +41,5 @@
     </div>
 
 </div>
-@yield('scripts-after')
 </body>
 </html>

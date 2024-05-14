@@ -1,8 +1,9 @@
 @extends('layouts.app')
 
-@section('scripts-before')
-    <script src="{{ asset('js/main/script.js') }}"></script>
+@section('scripts')
+    <script type="module" src="{{ asset('js/main/script.js') }}"></script>
     <script src="{{ asset('js/pages/users.js') }}"></script>
+
 @endsection
 
 @section('conteudo')
@@ -56,50 +57,5 @@
             </div>
         </div>
     </div>
-
-
-    <script defer type="module">
-        const loadingModal = loading();
-
-        window.onload = function () {
-            getAllUser();
-        };
-
-        async function getAllUser(request = {}) {
-            try {
-                loadingModal.show();
-                const response = await axios.get('/user/get', {
-                    params: request
-                });
-                const users = response.data.data.data;
-                mountTableUsers(users);
-
-            } catch (error) {
-                handleErrorsResponse(error);
-            } finally {
-                setTimeout(() => {
-                    loadingModal.hide();
-                }, 300);
-            }
-        }
-
-        function mountTableUsers(users) {
-            const tableBody = document.querySelector('#users-table tbody');
-            tableBody.innerHTML = '';
-
-            users.forEach(user => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${user.id}</td>
-                    <td>${user.name}</td>
-                    <td>${user.phone_number}</td>
-                    <td>${user.level}</td>
-                    <td>${user.email}</td>
-                    <td><a class="edit-button btn btn-outline-warning btn-sm" data-user-id="${user.id}">Editar</a></td>
-                `;
-                tableBody.appendChild(tr);
-            });
-        }
-
-    </script>
 @endsection
+

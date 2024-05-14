@@ -1,22 +1,12 @@
-function loading() {
-    const modal = document.createElement("div");
-    modal.innerHTML = `
-    <div class="modal fade" id="my-modal-loading" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="container">
-                <span class="loader meu-loader"></span>
-            </div>
-        </div>
-    </div>
-    `;
-
-    return new bootstrap.Modal(document.getElementById('my-modal-loading'), {
+window.loading  = function () {
+    const modalFind = document.getElementById('my-modal-loading');
+    return new bootstrap.Modal(modalFind, {
         keyboard: false,
         backdrop: 'static'
     });
 }
 
-function handleErrorsResponse(errorAxios) {
+window.handleErrorsResponse = function (errorAxios) {
     const message = errorAxios.response.data.message;
 
     const errorCode = errorAxios.response.data.status;

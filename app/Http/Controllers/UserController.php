@@ -41,6 +41,10 @@ class UserController extends Controller
             }
             $users = $users->paginate($data['per_page'] ?? 10);
 
+            if (!$users) {
+                throw new \Exception('Houve uma falha na consulta dos registros.');
+            }
+
             return response()->json([
                 'status' => 200,
                 'data' => $users,
