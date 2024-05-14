@@ -15,6 +15,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     perPage();
     getAllUser();
+    clearFilters();
+    function clearFilters() {
+        const btnFilter = document.getElementById("clear-filters");
+        btnFilter.addEventListener("click", (event) => {
+            event.preventDefault();
+            getAllUser();
+        });
+    }
+
 
     function perPage() {
         const dropDownItems = document.querySelectorAll('.dropdown-item');

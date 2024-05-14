@@ -7,7 +7,6 @@
 @endsection
 
 @section('conteudo')
-    {{--    TODO: alterar o campo level para um select ao inves de input text--}}
     <div class="container mt-3">
         <div class="mb-3 d-flex justify-content-around">
             <x-input-perpage route="user.index"/>
