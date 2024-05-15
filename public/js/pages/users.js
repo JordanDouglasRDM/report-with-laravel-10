@@ -1,7 +1,140 @@
 document.addEventListener('DOMContentLoaded', function () {
 
+    let paginateOut = {};
+    let filters = '';
     const loadingModal = window.loading();
     const modalUser = new bootstrap.Modal(document.getElementById('modal-user'));
+
+    //paginate
+    const previousPage = document.getElementById('previous-page');
+    const nextPage = document.getElementById('next-page');
+
+    document.addEventListener('click', function (event) {
+        const target = event.target;
+        if (target.classList.contains('pages')) {
+            event.preventDefault();
+            const page = target.innerText; // Ou qualquer outra ação que você queira realizar
+            if (parseInt(page)) {
+                getAllUser({page: page});
+            }
+        }
+    });
+
+
+    previousPage.addEventListener('click', (event) => {
+        event.preventDefault();
+        if (canNavigate(paginateOut, 'previous')) {
+            getAllUser({page: paginateOut.current_page - 1})
+        }
+    });
+
+    nextPage.addEventListener('click', (event) => {
+        event.preventDefault();
+        if (canNavigate(paginateOut, 'next')) {
+            getAllUser({page: paginateOut.current_page + 1})
+        }
+    });
+
+
+    function mountButtonsPage(paginate) {
+        if (paginate.to !== null) {
+            const paginationContainer = document.querySelector('.pagination');
+            const links = paginate.links;
+
+            // Limpa os itens de paginação existentes, exceto os botões "Anterior" e "Próximo"
+            while (paginationContainer.children.length > 2) {
+                paginationContainer.removeChild(paginationContainer.children[1]);
+            }
+
+            // Insere os novos itens de página antes do botão "Próximo"
+            links.forEach((link, index) => {
+                if (index > 0 && index < links.length - 1) { // Ignora o primeiro e o último link (Anterior e Próximo)
+                    const pageItem = document.createElement('li');
+                    pageItem.classList.add('page-item');
+                    if (link.active) {
+                        pageItem.classList.add('active');
+                    }
+
+                    const pageButton = document.createElement('button');
+                    pageButton.classList.add('page-link');
+                    pageButton.classList.add('pages');
+                    pageButton.innerText = link.label;
+
+                    pageItem.appendChild(pageButton);
+                    paginationContainer.insertBefore(pageItem, paginationContainer.children[paginationContainer.children.length - 1]);
+                }
+            });
+        }
+    }
+
+    function mountButtonsNavigate(paginate) {
+        if (paginate.current_page === 1) {
+            previousPage.classList.add('disabled');
+        } else {
+            previousPage.classList.remove('disabled');
+        }
+        if (paginate.current_page === paginate.last_page) {
+            nextPage.classList.add('disabled');
+        } else {
+            nextPage.classList.remove('disabled');
+        }
+    }
+
+    function canNavigate(paginate, type) {
+        if (paginate.to !== null) {
+            if (type === 'previous') {
+                return paginate.current_page > 1;
+            } else if (type === 'next') {
+                return paginate.current_page < paginate.last_page;
+            }
+        }
+        return false;
+    }
+
+    async function getAllUser(request = {}) {
+        try {
+            loadingModal.show();
+            if (filters !== '') {
+                request = Object.assign({}, request, { filter_search: filters });
+            }
+            const response = await axios.get('/user/get', {
+                params: request
+            });
+            const users = response.data.data.data;
+
+            if (users.length < 1) {
+                throw new Error('Nenhum registro encontrado');
+            }
+
+            const paginate = response.data.data;
+            paginateOut = paginate;
+            mountTableUsers(users);
+            mountShower(paginate);
+            mountButtonsNavigate(paginate);
+            mountButtonsPage(paginate);
+
+        } catch (error) {
+            console.log(error.message)
+            if (!error.response) {
+                error = {
+                    response: {
+                        data: {
+                            message: 'Erro interno do servidor',
+                            status: 500,
+                            error: error.message
+                        }
+                    }
+                }
+            }
+
+            window.handleErrorsResponse(error);
+        } finally {
+            setTimeout(() => {
+                loadingModal.hide();
+            }, 300);
+        }
+    }
+
 
     const toast = Swal.mixin({
         toast: true,
@@ -13,10 +146,11 @@ document.addEventListener('DOMContentLoaded', function () {
             toast.onmouseleave = Swal.resumeTimer;
         }
     });
-
     perPage();
     getAllUser();
+
     clearFilters();
+
     searchData();
 
     function searchData() {
@@ -24,7 +158,9 @@ document.addEventListener('DOMContentLoaded', function () {
         searchButton.addEventListener('click', (event) => {
             event.preventDefault();
             const searchInput = document.getElementById('form-search_input');
-            getAllUser({ filter_search: searchInput.value });
+            filters = searchInput.value;
+            getAllUser({filter_search: filters});
+            console.log(filters)
         });
     }
 
@@ -32,6 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const btnFilter = document.getElementById("clear-filters");
         btnFilter.addEventListener("click", (event) => {
             event.preventDefault();
+            filters = '';
             getAllUser();
         });
     }
@@ -41,27 +178,19 @@ document.addEventListener('DOMContentLoaded', function () {
         dropDownItems.forEach((item) => {
             item.addEventListener('click', (event) => {
                 event.preventDefault();
-                getAllUser({ per_page: item.innerText });
+                getAllUser({per_page: item.innerText});
             });
         });
     }
 
-    async function getAllUser(request = {}) {
-        try {
-            loadingModal.show();
-            const response = await axios.get('/user/get', {
-                params: request
-            });
-            const users = response.data.data.data;
-            mountTableUsers(users);
+    function mountShower(paginate) {
+        const from = document.getElementById('pg-from');
+        const to = document.getElementById('pg-to');
+        const total = document.getElementById('pg-total');
 
-        } catch (error) {
-            window.handleErrorsResponse(error);
-        } finally {
-            setTimeout(() => {
-                loadingModal.hide();
-            }, 300);
-        }
+        from.innerText = paginate.from;
+        to.innerText = paginate.to;
+        total.innerText = paginate.total;
     }
 
     function mountTableUsers(users) {
@@ -181,11 +310,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function updateUserById(request, userId) {
         try {
-            console.log('update ' + userId);
             const response = await axios.put('user/' + userId, request);
             modalUser.hide();
 
-            await getAllUser();
+            await getAllUser({page: paginateOut.current_page});
 
             toast.fire({
                 icon: "success",

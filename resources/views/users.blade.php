@@ -30,13 +30,9 @@
                 </tbody>
             </table>
         </div>
-
-        {{--            {{ $users->appends([--}}
-        {{--                'per-page' => request('per-page'),--}}
-        {{--                'filter-search' => request('filter-search')--}}
-        {{--            ])->onEachSide(1)->links() }}--}}
-        {{--        </div>--}}
-
+        <div class="container">
+            <x-pagination-asynchronous :data="[]" />
+        </div>
     </div>
 
     <!-- Modal -->

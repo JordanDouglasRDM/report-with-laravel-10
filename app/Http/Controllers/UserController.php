@@ -39,7 +39,7 @@ class UserController extends Controller
                         ->orWhere('level', 'like', '%' . $data['filter_search'] . '%');
                 });
             }
-            $users = $users->paginate($data['per_page'] ?? 10);
+            $users = $users->paginate($data['per_page'] ?? 10)->onEachSide(1);
 
             if (!$users) {
                 throw new \Exception('Houve uma falha na consulta dos registros.');
