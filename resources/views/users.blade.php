@@ -31,7 +31,7 @@
             </table>
         </div>
         <div class="container">
-            <x-pagination-asynchronous :data="[]" />
+            <x-pagination-asynchronous />
         </div>
     </div>
 

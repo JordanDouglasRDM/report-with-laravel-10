@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             loadingModal.show();
             if (filters !== '') {
-                request = Object.assign({}, request, { filter_search: filters });
+                request = Object.assign({}, request, {filter_search: filters});
             }
             const response = await axios.get('/user/get', {
                 params: request
@@ -155,13 +155,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function searchData() {
         const searchButton = document.getElementById('form-search_button');
+        const searchInput = document.getElementById('form-search_input');
+
         searchButton.addEventListener('click', (event) => {
             event.preventDefault();
+            action();
+        });
+        searchInput.addEventListener('keypress', (event) => {
+
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                action();
+            }
+        });
+
+        function action() {
             const searchInput = document.getElementById('form-search_input');
             filters = searchInput.value;
             getAllUser({filter_search: filters});
-            console.log(filters)
-        });
+        }
     }
 
     function clearFilters() {

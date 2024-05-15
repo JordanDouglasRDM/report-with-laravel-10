@@ -1,7 +1,3 @@
-@props(
-    ['data']
-)
-
 <div class="container d-flex mt-5 justify-content-between">
     <div class="me-4">
         <span>Exibindo</span>
@@ -18,7 +14,6 @@
                 <li class="page-item">
                     <button class="page-link" id="previous-page">Anterior</button>
                 </li>
-
 
                 <li class="page-item">
                     <button class="page-link" id="next-page"

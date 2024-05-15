@@ -1,4 +1,5 @@
-<x-app-layout>
+@extends('layouts.app')
+@section('conteudo')
     <x-slot name="header">
         <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 dark:tw-text-gray-200 tw-leading-tight">
             {{ __('Dashboard') }}
@@ -14,4 +15,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection
