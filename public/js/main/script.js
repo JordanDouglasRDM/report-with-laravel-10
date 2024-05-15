@@ -8,6 +8,17 @@ window.loading  = function () {
 }
 
 window.handleErrorsResponse = function (errorAxios) {
+    if (!errorAxios.response) {
+        errorAxios = {
+            response: {
+                data: {
+                    message: 'Erro interno do servidor',
+                    status: 500,
+                    error: errorAxios.message
+                }
+            }
+        }
+    }
     const message = errorAxios.response.data.message;
 
     const errorCode = errorAxios.response.data.status;

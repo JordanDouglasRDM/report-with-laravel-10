@@ -17,11 +17,12 @@
             <table id="users-table" class="table table-striped table-hover">
                 <thead>
                 <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Telefone</th>
-                    <th scope="col">Nível de acesso</th>
-                    <th scope="col">Email</th>
+                    <th class="order-by" id="id" scope="col">ID</th>
+                    <th class="order-by" id="name" scope="col">Nome</th>
+                    <th class="order-by" id="phone_number" scope="col">Telefone</th>
+                    <th class="order-by" id="level" scope="col">Nível de acesso</th>
+                    <th class="order-by" id="email" scope="col">Email</th>
+                    <th class="order-by" id="created_at" scope="col">Data Criação</th>
                     <th scope="col">Ações</th>
                 </tr>
                 </thead>
@@ -31,7 +32,7 @@
             </table>
         </div>
         <div class="container">
-            <x-pagination-asynchronous />
+            <x-pagination-asynchronous/>
         </div>
     </div>
 

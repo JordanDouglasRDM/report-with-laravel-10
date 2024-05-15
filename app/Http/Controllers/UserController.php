@@ -29,15 +29,20 @@ class UserController extends Controller
     {
         try {
             $data = $request->validated();
-            $users = $this->user->query(); // Inicialize a consulta aqui
+            $users = $this->user->query();
 
             if (isset($data['filter_search'])) {
+
                 $users->where(function ($query) use ($data) {
                     $query->where('name', 'like', '%' . $data['filter_search'] . '%')
                         ->orWhere('email', 'like', '%' . $data['filter_search'] . '%')
                         ->orWhere('phone_number', 'like', '%' . $data['filter_search'] . '%')
                         ->orWhere('level', 'like', '%' . $data['filter_search'] . '%');
+//                      ->orWhere('created_at', 'like', '%' . $data['filter_search'] . '%');
                 });
+            }
+            if (isset($data['order_by'])) {
+                $users->orderBy($data['order_by'], $data['order_direction'] ?? 'asc');
             }
             $users = $users->paginate($data['per_page'] ?? 10)->onEachSide(1);
 

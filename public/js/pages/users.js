@@ -2,18 +2,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let paginateOut = {};
     let filters = '';
+    let orderBy = '';
+    let orderDirection = 'desc';
     const loadingModal = window.loading();
     const modalUser = new bootstrap.Modal(document.getElementById('modal-user'));
+    const filterImg = document.createElement('img');
 
     //paginate
     const previousPage = document.getElementById('previous-page');
     const nextPage = document.getElementById('next-page');
 
+    perPage();
+    getAllUser();
+    clearFilters();
+    searchData();
+    orderData();
+
     document.addEventListener('click', function (event) {
         const target = event.target;
         if (target.classList.contains('pages')) {
             event.preventDefault();
-            const page = target.innerText; // Ou qualquer outra ação que você queira realizar
+            const page = target.innerText;
             if (parseInt(page)) {
                 getAllUser({page: page});
             }
@@ -35,20 +44,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-
     function mountButtonsPage(paginate) {
         if (paginate.to !== null) {
             const paginationContainer = document.querySelector('.pagination');
             const links = paginate.links;
 
-            // Limpa os itens de paginação existentes, exceto os botões "Anterior" e "Próximo"
             while (paginationContainer.children.length > 2) {
                 paginationContainer.removeChild(paginationContainer.children[1]);
             }
 
-            // Insere os novos itens de página antes do botão "Próximo"
             links.forEach((link, index) => {
-                if (index > 0 && index < links.length - 1) { // Ignora o primeiro e o último link (Anterior e Próximo)
+                if (index > 0 && index < links.length - 1) {
                     const pageItem = document.createElement('li');
                     pageItem.classList.add('page-item');
                     if (link.active) {
@@ -66,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     }
+
 
     function mountButtonsNavigate(paginate) {
         if (paginate.current_page === 1) {
@@ -94,8 +101,16 @@ document.addEventListener('DOMContentLoaded', function () {
     async function getAllUser(request = {}) {
         try {
             loadingModal.show();
+
+            //se eu possuo filtro definido, na nova paginação, permanece com o filtro
             if (filters !== '') {
                 request = Object.assign({}, request, {filter_search: filters});
+            }
+            //se eu possuo order_by definido, na nova paginação, permanece com o order_by
+            if (orderBy !== '') {
+                request = Object.assign({}, request, {
+                    order_by: orderBy
+                });
             }
             const response = await axios.get('/user/get', {
                 params: request
@@ -114,18 +129,6 @@ document.addEventListener('DOMContentLoaded', function () {
             mountButtonsPage(paginate);
 
         } catch (error) {
-            console.log(error.message)
-            if (!error.response) {
-                error = {
-                    response: {
-                        data: {
-                            message: 'Erro interno do servidor',
-                            status: 500,
-                            error: error.message
-                        }
-                    }
-                }
-            }
 
             window.handleErrorsResponse(error);
         } finally {
@@ -134,8 +137,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 300);
         }
     }
-
-
     const toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -146,12 +147,47 @@ document.addEventListener('DOMContentLoaded', function () {
             toast.onmouseleave = Swal.resumeTimer;
         }
     });
-    perPage();
-    getAllUser();
 
-    clearFilters();
+    function orderData() {
+        const ths = document.querySelectorAll('.order-by');
+        ths.forEach((th) => {
+            th.classList.remove('d-flex', 'justify-content-between');
+        });
+        ths.forEach((th) => {
+            th.addEventListener('click', () => {
+                ths.forEach((th) => {
+                    th.classList.remove('d-flex', 'justify-content-between');
+                });
+                if (orderBy === th.id) {
+                    if (orderDirection === 'asc') {
+                        orderDirection = 'desc';
+                        filterImg.classList.remove('align-self-end');
+                        filterImg.classList.add('align-self-baseline');
+                        filterImg.src = '/assets/img/filter-down.svg';
 
-    searchData();
+                    } else {
+                        orderDirection = 'asc';
+                        filterImg.classList.add('align-self-end');
+                        filterImg.classList.remove('align-self-baseline');
+                        filterImg.src = '/assets/img/filter-up.svg';
+                    }
+                } else {
+                    orderBy = th.id;
+                    filterImg.classList.remove('align-self-end');
+                    filterImg.classList.add('align-self-baseline');
+                    filterImg.src = '/assets/img/filter-down.svg';
+                }
+                th.classList.add('d-flex', 'justify-content-between')
+                th.appendChild(filterImg);
+                getAllUser({
+                    order_by: orderBy,
+                    order_direction: orderDirection,
+                    per_page: paginateOut.per_page
+                });
+            });
+        })
+    }
+
 
     function searchData() {
         const searchButton = document.getElementById('form-search_button');
@@ -181,6 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
         btnFilter.addEventListener("click", (event) => {
             event.preventDefault();
             filters = '';
+            filterImg.remove();
             getAllUser();
         });
     }
@@ -211,12 +248,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         users.forEach(user => {
             const tr = document.createElement('tr');
+            let createdAt = new Date(user.created_at)
+            createdAt = createdAt.toLocaleDateString('pt-BR');
+
             tr.innerHTML = `
                 <td>${user.id}</td>
                 <td>${user.name}</td>
                 <td>${user.phone_number}</td>
                 <td>${user.level}</td>
                 <td>${user.email}</td>
+                <td>${createdAt}</td>
                 <td><a class="edit-button btn btn-outline-warning btn-sm" id="${user.id}">Editar</a></td>
             `;
             tableBody.appendChild(tr);
@@ -235,12 +276,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    async function mountModalUserSelected(userId) {
-        const user = await getUserById(userId);
-        if (!user) {
-            return;
-        }
-
+    function mountModalUser(user = {}) {
         const modalBody = document.querySelector('.modal-body');
         modalBody.innerHTML = '';
 
@@ -249,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <label for="name" class="form-label">Nome</label>
                     <input type="text" class="form-control bg-body rounded" name="name" id="name"
                            placeholder="Digite seu nome"
-                           value="${user.name}"
+                           value="${user.name  ?? ''}"
                            autocomplete="off"
                     >
                 </div>
@@ -257,28 +293,34 @@ document.addEventListener('DOMContentLoaded', function () {
                     <label for="phone_number" class="form-label">Número de Telefone</label>
                     <input type="tel" class="form-control bg-body rounded" id="phone_number"
                            placeholder="Digite seu número de telefone"
-                           value="${user.phone_number}"
+                           value="${user.phone_number  ?? ''}"
                            autocomplete="off"
                     >
                 </div>
                 <div class="mb-3">
                     <label for="level" class="form-label">Nível</label>
                     <select class="form-select" id="level" autocomplete="off">
-                        <option value="operator" ${user.level === 'operator' ? 'selected' : ''}>Operador</option>
-                        <option value="admin" ${user.level === 'admin' ? 'selected' : ''}>Administrador</option>
+                        <option value="operator" ${user.level  ?? '' === 'operator' ? 'selected' : ''}>Operador</option>
+                        <option value="admin" ${user.level  ?? '' === 'admin' ? 'selected' : ''}>Administrador</option>
                     </select>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control rounded disabled:opacity-25" id="email"
                            placeholder="Digite seu email"
-                           value="${user.email}"
+                           value="${user.email  ?? ''}"
                            autocomplete="off"
                            disabled
                     >
                 </div>
         `;
-
+    }
+    async function mountModalUserSelected(userId) {
+        const user = await getUserById(userId);
+        if (!user) {
+            return;
+        }
+        mountModalUser(user)
         modalUser.show();
         defineMaskPhoneNumber();
         prepareEventClickSubmitFormChanges(userId);

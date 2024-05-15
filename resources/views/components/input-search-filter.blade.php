@@ -1,6 +1,6 @@
 @props(['route'])
 
-<div class="container" style="width: 35%">
+<div class="" style="width: 35%">
     <div class="input-group">
         <input type="text" class="form-control bg-light-subtle" name="filter-search"
                id="form-search_input"
