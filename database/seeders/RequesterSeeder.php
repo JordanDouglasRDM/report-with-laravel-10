@@ -13,6 +13,6 @@ class RequesterSeeder extends Seeder
      */
     public function run(): void
     {
-        Requester::factory(300)->create();
+        Requester::factory(800)->create();
     }
 }

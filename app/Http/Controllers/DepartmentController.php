@@ -39,6 +39,7 @@ class DepartmentController extends Controller
     {
         try {
             $data = $request->validated();
+            $data['user_id'] = auth()->guard()->user()->id;
 
             $this->department->create($data);
 
@@ -61,7 +62,8 @@ class DepartmentController extends Controller
     {
         try {
             $data = $request->validated();
-            $departments = $this->department->query();
+
+            $departments = $this->department->query()->where('user_id', auth()->guard()->user()->id);
 
 
             if (isset($data['filter_search'])) {
@@ -101,7 +103,9 @@ class DepartmentController extends Controller
     public function show(int $id)
     {
         try {
-            $department = $this->department->where('id', $id)
+            $department = $this->department
+                ->where('user_id', auth()->guard()->user()->id)
+                ->where('id', $id)
                 ->withCount(['requesters'])
                 ->first();
 
@@ -141,7 +145,10 @@ class DepartmentController extends Controller
         try {
             $data = $request->validated();
 
-            $result = $this->department->where('id', $departmentId)->update($data);
+            $result = $this->department
+                ->where('user_id', auth()->guard()->user()->id)
+                ->where('id', $departmentId)
+                ->update($data);
 
             if (!$result) {
                 throw new \Exception('Houve um erro ao atualizar o departamento.');
@@ -167,7 +174,10 @@ class DepartmentController extends Controller
     {
         try {
 
-            $result = $this->department->where('id', $departmentId)->delete();
+            $result = $this->department
+                ->where('user_id', auth()->guard()->user()->id)
+                ->where('id', $departmentId)
+                ->delete();
             if (!$result) {
                 throw new \Exception('Houve um erro ao excluir o departamento.');
             }

@@ -40,9 +40,9 @@ class UserController extends Controller
                         ->orWhere('level', 'like', '%' . $data['filter_search'] . '%');
                 });
             }
-            if (isset($data['order_by'])) {
-                $users->orderBy($data['order_by'], $data['order_direction'] ?? 'asc');
-            }
+            $users->orderBy($data['order_by'] ?? 'created_at', $data['order_direction'] ?? 'desc');
+            $users->withCount(['requesters', 'departments']);
+
             $users = $users->paginate($data['per_page'] ?? 10)->onEachSide(1);
 
             if (!$users) {

@@ -14,7 +14,7 @@
             <x-input-clear-filters route="user.index"/>
         </div>
         <div class="table-wrapper mb-1 bg-body-tertiary">
-            <table id="users-table" class="table table-striped table-hover">
+            <table id="users-table" class="table table-striped table-hover text-center">
                 <thead>
                 <tr>
                     <th class="order-by" id="id" scope="col">ID</th>
@@ -22,6 +22,7 @@
                     <th class="order-by" id="phone_number" scope="col">Telefone</th>
                     <th class="order-by" id="level" scope="col">Nível de acesso</th>
                     <th class="order-by" id="email" scope="col">Email</th>
+                    <th class="order-by" id="email" scope="col">Departamentos/Funcionários</th>
                     <th class="order-by" id="created_at" scope="col">Data Criação</th>
                     <th scope="col">Ações</th>
                 </tr>

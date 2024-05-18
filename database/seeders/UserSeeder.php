@@ -21,6 +21,6 @@ class UserSeeder extends Seeder
             'phone_number' => '18997455265',
             'level' => 'admin'
         ]);
-        User::factory(499)->create();
+        User::factory(19)->create();
     }
 }

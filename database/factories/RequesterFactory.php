@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Department;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,10 +20,12 @@ class RequesterFactory extends Factory
     {
         $departments = Department::all();
         $departmentsId = $departments->pluck('id')->toArray();
+        $usersId = $departments->pluck('user_id')->toArray();
 
         return [
-            'name' => fake()->unique()->firstName(),
+            'name' => fake()->unique()->name(),
             'department_id' => fake()->randomElement($departmentsId),
+            'user_id' => fake()->randomElement($usersId),
         ];
     }
 }

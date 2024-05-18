@@ -12,11 +12,17 @@ class Requester extends Model
 
     protected $fillable = [
         'name',
-        'department_id'
+        'department_id',
+        'user_id'
     ];
 
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class, 'department', 'id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,6 +17,9 @@ class DepartmentFactory extends Factory
      */
     public function definition(): array
     {
+        $users = User::all();
+        $usersId = $users->pluck('id')->toArray();
+
         $randomDepartment = [
             'Recursos Humanos',
             'Financeiro',
@@ -40,6 +44,7 @@ class DepartmentFactory extends Factory
         ];
         return [
             'name' => fake()->unique()->randomElement($randomDepartment),
+            'user_id' => fake()->randomElement($usersId),
         ];
     }
 }
