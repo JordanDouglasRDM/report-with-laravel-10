@@ -24,7 +24,7 @@ class UpdateDepartmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:departments,name',
+            'name' => 'required|string|max:255|unique_for_user:departments,name',
         ];
     }
 

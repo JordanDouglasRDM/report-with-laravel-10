@@ -13,7 +13,7 @@ class RequesterController extends Controller
      */
     public function index()
     {
-        //
+        return view('requesters');
     }
 
     /**

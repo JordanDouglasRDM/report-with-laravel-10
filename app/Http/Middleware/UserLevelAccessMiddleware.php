@@ -11,17 +11,23 @@ class UserLevelAccessMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
-    public function handle(Request $request, Closure $next, $level): Response
+    public function handle(Request $request, Closure $next, string $level, string $secondMiddleware = ''): Response
     {
-        if (!auth()->check() || auth()->guard()->user()->level !== $level) {
-//            abort(403, 'Acesso não autorizado.');
-            if (auth()->check()) {
-                return redirect()->route('dashboard');
-            } else {
-                return redirect()->route('login');
+
+        $userAuth = auth()->guard()->user()->level;
+
+        if (!auth()->check() || $userAuth !== $level) {
+
+            if ($secondMiddleware !== $userAuth) {
+                if (auth()->check()) {
+                    return redirect()->route('dashboard');
+                } else {
+                    return redirect()->route('login');
+                }
             }
+
         }
         return $next($request);
     }
