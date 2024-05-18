@@ -137,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 300);
         }
     }
+
     const toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -285,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <label for="name" class="form-label">Nome</label>
                     <input type="text" class="form-control bg-body rounded" name="name" id="name"
                            placeholder="Digite seu nome"
-                           value="${user.name  ?? ''}"
+                           value="${user.name ?? ''}"
                            autocomplete="off"
                     >
                 </div>
@@ -293,28 +294,29 @@ document.addEventListener('DOMContentLoaded', function () {
                     <label for="phone_number" class="form-label">Número de Telefone</label>
                     <input type="tel" class="form-control bg-body rounded" id="phone_number"
                            placeholder="Digite seu número de telefone"
-                           value="${user.phone_number  ?? ''}"
+                           value="${user.phone_number ?? ''}"
                            autocomplete="off"
                     >
                 </div>
                 <div class="mb-3">
                     <label for="level" class="form-label">Nível</label>
                     <select class="form-select" id="level" autocomplete="off">
-                        <option value="operator" ${user.level  ?? '' === 'operator' ? 'selected' : ''}>Operador</option>
-                        <option value="admin" ${user.level  ?? '' === 'admin' ? 'selected' : ''}>Administrador</option>
+                        <option value="operator" ${user.level ?? '' === 'operator' ? 'selected' : ''}>Operador</option>
+                        <option value="admin" ${user.level ?? '' === 'admin' ? 'selected' : ''}>Administrador</option>
                     </select>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control rounded disabled:opacity-25" id="email"
                            placeholder="Digite seu email"
-                           value="${user.email  ?? ''}"
+                           value="${user.email ?? ''}"
                            autocomplete="off"
                            disabled
                     >
                 </div>
         `;
     }
+
     async function mountModalUserSelected(userId) {
         const user = await getUserById(userId);
         if (!user) {
@@ -327,19 +329,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function defineMaskPhoneNumber() {
+        const phoneNumber = document.querySelector('input#phone_number');
         return IMask(
-            document.getElementById('phone_number'),
+            phoneNumber,
             {
                 mask: '(00) 00000-0000'
             }
         );
     }
 
+
     async function prepareEventClickSubmitFormChanges(userId) {
         const submitButton = document.getElementById('submit-form');
         const newSubmitHandler = async (event) => {
             event.preventDefault();
             const user = getDataUserChanged();
+            console.log(user)
             await updateUserById(user, userId);
         };
 
@@ -349,10 +354,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function getDataUserChanged() {
-        const name = document.getElementById("name").value;
-        const email = document.getElementById("email").value;
-        const level = document.getElementById("level").value;
-        const phone_number = document.getElementById("phone_number").value;
+        const name = document.querySelector("input#name").value;
+        const email = document.querySelector("input#email").value;
+        const level = document.querySelector("select#level").value;
+        const phone_number = document.querySelector("input#phone_number").value;
 
         return {
             name: name,
@@ -377,32 +382,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
         } catch (error) {
-            const message = error.response?.data?.message || 'Erro desconhecido';
-            const errorCode = error.response?.data?.status || 500;
-            let errors = error.response?.data?.error || 'Erro desconhecido';
-
-            if (errorCode === 422) {
-                const errorObject = error.response.data.error;
-                const errorArray = Object.values(errorObject);
-                errors = errorArray.join('<br>');
-
-                if (errorObject) {
-                    for (const key in errorObject) {
-                        const field = document.getElementById(key);
-                        field.classList.add('border-danger-subtle');
-                        setTimeout(() => {
-                            field.classList.remove('border-danger-subtle');
-                        }, 4000);
-                    }
-                }
-            }
-
-            toast.fire({
-                icon: "error",
-                title: message,
-                html: errors,
-                timer: 4000
-            });
+            window.handleErrorsResponse(error);
         }
     }
 

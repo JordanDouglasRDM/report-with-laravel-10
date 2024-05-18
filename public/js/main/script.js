@@ -1,5 +1,5 @@
 const toast = initializeToast();
-window.loading  = function () {
+window.loading = function () {
     const modalFind = document.getElementById('my-modal-loading');
     return new bootstrap.Modal(modalFind, {
         keyboard: false,
@@ -31,12 +31,14 @@ window.handleErrorsResponse = function (errorAxios) {
 
         if (errorObject) {
             for (const key in errorObject) {
-                const field = document.getElementById(key);
-                if (field) {
-                    field.classList.add('border-danger-subtle');
-                    setTimeout(() => {
-                        field.classList.remove('border-danger-subtle');
-                    }, 4000)
+                const fields = document.querySelectorAll('input#' + key);
+                if (fields) {
+                    fields.forEach((field) => {
+                        field.classList.add('border-danger-subtle');
+                        setTimeout(() => {
+                            field.classList.remove('border-danger-subtle');
+                        }, 4000)
+                    })
                 }
             }
         }

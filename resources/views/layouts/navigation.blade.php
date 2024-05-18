@@ -20,6 +20,9 @@
                         <x-nav-link :href="route('user.index')" :active="request()->routeIs('user.index')">
                             {{ __('Users') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('department.index')" :active="request()->routeIs('department.index')">
+                            {{ __('Departments') }}
+                        </x-nav-link>
                     @endcan
                 </div>
             </div>

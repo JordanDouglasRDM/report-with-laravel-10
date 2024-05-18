@@ -16,7 +16,12 @@ class UserLevelAccessMiddleware
     public function handle(Request $request, Closure $next, $level): Response
     {
         if (!auth()->check() || auth()->guard()->user()->level !== $level) {
-            abort(403, 'Acesso não autorizado.');
+//            abort(403, 'Acesso não autorizado.');
+            if (auth()->check()) {
+                return redirect()->route('dashboard');
+            } else {
+                return redirect()->route('login');
+            }
         }
         return $next($request);
     }

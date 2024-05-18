@@ -38,7 +38,6 @@ class UserController extends Controller
                         ->orWhere('email', 'like', '%' . $data['filter_search'] . '%')
                         ->orWhere('phone_number', 'like', '%' . $data['filter_search'] . '%')
                         ->orWhere('level', 'like', '%' . $data['filter_search'] . '%');
-//                      ->orWhere('created_at', 'like', '%' . $data['filter_search'] . '%');
                 });
             }
             if (isset($data['order_by'])) {
