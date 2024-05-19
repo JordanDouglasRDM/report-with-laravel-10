@@ -16,7 +16,7 @@ class UserLevelAccessMiddleware
     public function handle(Request $request, Closure $next, string $level, string $secondMiddleware = ''): Response
     {
 
-        $userAuth = auth()->guard()->user()->level;
+        $userAuth = auth()->guard()->user()->level ?? null;
 
         if (!auth()->check() || $userAuth !== $level) {
 

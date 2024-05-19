@@ -20,19 +20,9 @@ class StoreDepartmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|unique_for_user:departments,name',
+            'name' => 'required|min:1|string|unique_for_user:departments,name',
         ];
     }
-//public function rules(): array
-//    {
-//        return [
-//            'name' => [
-//                'required',
-//                'string',
-//                new UniqueForUserRule('departments', 'name',)
-//            ],
-//        ];
-//    }
 
     protected function failedValidation(Validator $validator)
     {

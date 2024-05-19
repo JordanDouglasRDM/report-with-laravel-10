@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreRequesterRequest extends FormRequest
+class GetAllRequesterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,9 @@ class StoreRequesterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|min:1|unique_for_user:requesters,name',
-            'department_id' => 'required|string|min:1|exists:departments,id',
+            'filter_search' => 'nullable|string|max:100',
+            'order_by' => 'nullable|in:id,name,created_at,department',
+            'order_direction' => 'nullable|in:asc,desc',
         ];
     }
     protected function failedValidation(Validator $validator)
@@ -34,6 +35,6 @@ class StoreRequesterRequest extends FormRequest
             'status' => 422,
             'message' => 'Os dados fornecidos são inválidos!',
             'error' => $validator->errors()
-        ], 422));
+        ],422));
     }
 }

@@ -18,7 +18,7 @@ class Requester extends Model
 
     public function department(): BelongsTo
     {
-        return $this->belongsTo(Department::class, 'department', 'id');
+        return $this->belongsTo(Department::class);
     }
 
     public function user(): BelongsTo

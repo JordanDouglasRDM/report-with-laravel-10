@@ -2,16 +2,19 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateRequesterRequest extends FormRequest
 {
+    protected int $requesterId;
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +25,16 @@ class UpdateRequesterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|unique_for_user:requesters,name|min:1',
+            'department_id' => 'nullable|integer|exists:departments,id',
         ];
+    }
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'status' => 422,
+            'message' => 'Os dados fornecidos são inválidos!',
+            'error' => $validator->errors()
+        ],422));
     }
 }
