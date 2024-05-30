@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RequesterController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,9 @@ Route::middleware('level:admin,operator')->group(function () {
     Route::resource('/department', DepartmentController::class);
     Route::get('/requester/get', [RequesterController::class, 'getAll']);
     Route::resource('/requester', RequesterController::class);
+
+    Route::get('/report/get', [ReportController::class, 'getAll']);
+    Route::resource('/report', ReportController::class);
 });
 
 

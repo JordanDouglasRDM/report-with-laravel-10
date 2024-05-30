@@ -18,6 +18,10 @@ return new class extends Migration
         Schema::table('departments', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users');
         });
+        Schema::table('reports', function (Blueprint $table) {
+            $table->foreign('requester_id')->references('id')->on('requesters');
+            $table->foreign('user_id')->references('id')->on('users');
+        });
     }
 
     /**
@@ -30,6 +34,10 @@ return new class extends Migration
             $table->dropForeign('user_id');
         });
         Schema::table('departments', function (Blueprint $table) {
+            $table->dropForeign('user_id');
+        });
+        Schema::table('reports', function (Blueprint $table) {
+            $table->dropForeign('requester_id');
             $table->dropForeign('user_id');
         });
     }
