@@ -20,9 +20,14 @@
         <div>
             <x-input-label for="name" :value="__('Name')" />
             <x-text-input id="name" name="name" type="text" class="tw-mt-1 tw-block tw-w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
+
             <x-input-error class="tw-mt-2" :messages="$errors->get('name')" />
         </div>
-
+        <div>
+            <x-input-label for="phone_number" value="Telefone" />
+            <x-text-input id="phone_number" name="phone_number" type="text" class="tw-mt-1 tw-block tw-w-full" :value="old('phone_number', $user->phone_number)" required autocomplete="phone" />
+            <x-input-error class="tw-mt-2" :messages="$errors->get('phone_number')" />
+        </div>
         <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="tw-mt-1 tw-block tw-w-full" :value="old('email', $user->email)" required autocomplete="username" />
