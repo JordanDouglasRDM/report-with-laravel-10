@@ -2,6 +2,7 @@
 
 @section('scripts')
     <script type="module" src="{{ asset('js/main/script.js') }}"></script>
+    <script src="{{asset('js/main/helpers.js')}}"></script>
     <script src="{{ asset('js/pages/reports.js') }}"></script>
 
 @endsection
@@ -16,7 +17,7 @@
             <div class="form-group">
                 <input type="date" class="form-control" id="filter_date">
             </div>
-            <x-input-search-filter :switch="true" />
+            <x-input-search-filter :switch="true"/>
 
             <x-input-clear-filters route="report.index"/>
         </div>

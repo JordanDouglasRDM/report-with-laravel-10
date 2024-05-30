@@ -9,50 +9,50 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalReport = new bootstrap.Modal(document.getElementById('modal-report'));
     const modalReportNew = new bootstrap.Modal(document.getElementById('modal-report-new'));
     const filterImg = document.createElement('img');
-    const newButton = document.getElementById('new-report');
-    const newButtonSubmit = document.getElementById('submit-form-new-report');
     const filterDate = document.getElementById('filter_date');
-    const divOrderBy = document.querySelectorAll('.order-by');
     const checkbox = document.querySelector('input[type="checkbox"]');
     const searchButton = document.getElementById('form-search_button');
     const searchInput = document.getElementById('form-search_input');
+
     document.querySelector('.dropdown-toggle').classList.add('disabled');
 
-    filterDate.value = dateNowFormated();
-
-    divOrderBy.forEach((div) => {
-        div.appendChild(createFilterIcon());
+    const toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
     });
 
-    function createFilterIcon() {
-        const span = document.createElement('span');
-        const img = document.createElement('img');
-        span.classList.add('align-self-center');
-        img.src = '/assets/img/filter-button.svg';
-        img.alt = 'Imagem de um filtro indicando ação de filtrar';
-        span.appendChild(img);
-        return span;
-    }
+    const divOrderBy = addImagesFilters();
 
-    function dateNowFormated() {
-        let options = {timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit'};
-        let date = new Date().toLocaleDateString('pt-BR', options);
-        let [day, month, year] = date.split('/');
-        return `${year}-${month}-${day}`;
-    }
+    //define data atual da requisição como now
+    filterDate.value = dateNowFormated();
 
+    //salvar novo registro
+    const newButtonSubmit = document.getElementById('submit-form-new-report');
     newButtonSubmit.addEventListener('click', function (event) {
         event.preventDefault();
         const report = getDataReportChanged();
         store(report);
 
-    })
+    });
+    //--------------------------
+
+    //abrir modal de novo registro
+    const newButton = document.getElementById('new-report');
     newButton.addEventListener('click', function (event) {
         event.preventDefault();
         modalReportNew.show();
         mountModalReportNew()
         selectFilteredRequesters();
     });
+    //-------------------------
+
+
     const deleteButton = document.getElementById('delete-button-report');
 
     deleteButton.addEventListener('click', function (event) {
@@ -72,8 +72,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 destroy(reportId);
             }
         });
-
-
     })
 
     function getDataReportChanged() {
@@ -208,7 +206,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    //paginate
     function mountModalReportNew() {
         const modalBody = document.querySelector('.new-report-modal-body');
         modalBody.innerHTML = '';
@@ -260,15 +257,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-    const previousPage = document.getElementById('previous-page');
-
-    const nextPage = document.getElementById('next-page');
     perPage();
     getAllReport();
     clearFilters();
     searchData();
-
     orderData();
+
     filterDate.addEventListener('change', function (event) {
         event.preventDefault();
         searchOutDate = false;
@@ -287,6 +281,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    //paginate
+    const previousPage = document.getElementById('previous-page');
+    const nextPage = document.getElementById('next-page');
+
     previousPage.addEventListener('click', (event) => {
         event.preventDefault();
         if (canNavigate(paginateOut, 'previous')) {
@@ -300,60 +298,6 @@ document.addEventListener('DOMContentLoaded', function () {
             getAllReport({page: paginateOut.current_page + 1})
         }
     });
-
-
-    function mountButtonsPage(paginate) {
-        if (paginate.to !== null) {
-            const paginationContainer = document.querySelector('.pagination');
-            const links = paginate.links;
-
-            while (paginationContainer.children.length > 2) {
-                paginationContainer.removeChild(paginationContainer.children[1]);
-            }
-
-            links.forEach((link, index) => {
-                if (index > 0 && index < links.length - 1) {
-                    const pageItem = document.createElement('li');
-                    pageItem.classList.add('page-item');
-                    if (link.active) {
-                        pageItem.classList.add('active');
-                    }
-
-                    const pageButton = document.createElement('button');
-                    pageButton.classList.add('page-link');
-                    pageButton.classList.add('pages');
-                    pageButton.innerText = link.label;
-
-                    pageItem.appendChild(pageButton);
-                    paginationContainer.insertBefore(pageItem, paginationContainer.children[paginationContainer.children.length - 1]);
-                }
-            });
-        }
-    }
-
-    function mountButtonsNavigate(paginate) {
-        if (paginate.current_page === 1) {
-            previousPage.classList.add('disabled');
-        } else {
-            previousPage.classList.remove('disabled');
-        }
-        if (paginate.current_page === paginate.last_page) {
-            nextPage.classList.add('disabled');
-        } else {
-            nextPage.classList.remove('disabled');
-        }
-    }
-
-    function canNavigate(paginate, type) {
-        if (paginate.to !== null) {
-            if (type === 'previous') {
-                return paginate.current_page > 1;
-            } else if (type === 'next') {
-                return paginate.current_page < paginate.last_page;
-            }
-        }
-        return false;
-    }
 
     async function getAllReport(request = {}) {
         try {
@@ -399,10 +343,10 @@ document.addEventListener('DOMContentLoaded', function () {
             paginateOut = paginate;
             mountTableReports(reports);
             mountShower(paginate);
-            mountButtonsNavigate(paginate);
+            mountButtonsNavigate(previousPage, nextPage, paginate);
             mountButtonsPage(paginate);
 
-        } catch(error) {
+        } catch (error) {
             window.handleErrorsResponse(error);
         } finally {
             setTimeout(() => {
@@ -410,18 +354,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 300);
         }
     }
-
-    const toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-        }
-    });
-
 
     function orderData() {
         divOrderBy.forEach((div) => {
@@ -505,16 +437,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
 
-    }
-
-    function mountShower(paginate) {
-        const from = document.getElementById('pg-from');
-        const to = document.getElementById('pg-to');
-        const total = document.getElementById('pg-total');
-
-        from.innerText = paginate.from;
-        to.innerText = paginate.to;
-        total.innerText = paginate.total;
     }
 
     function mountTableReports(reports) {
