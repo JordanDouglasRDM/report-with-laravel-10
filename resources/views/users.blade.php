@@ -2,29 +2,61 @@
 
 @section('scripts')
     <script type="module" src="{{ asset('js/main/script.js') }}"></script>
+    <script src="{{ asset('js/main/helpers.js') }}"></script>
     <script src="{{ asset('js/pages/users.js') }}"></script>
 
 @endsection
 
 @section('conteudo')
-    <div class="container mt-3">
+    <div class="container-fluid mt-lg-5" style="width: 90%">
         <div class="mb-3 d-flex justify-content-around">
             <x-input-perpage route="user.index"/>
-            <x-input-search-filter route="user.index"/>
+            <x-input-search-filter :switch="false"/>
             <x-input-clear-filters route="user.index"/>
         </div>
-        <div class="table-wrapper mb-1 bg-body-tertiary">
-            <table id="users-table" class="table table-striped table-hover">
+        <div class="table-wrapper mb-1 bg-body-tertiary rounded-4">
+            <table id="users-table" class="table table-bordered table-hover">
                 <thead>
                 <tr>
-                    <th class="order-by" id="id" scope="col">ID</th>
-                    <th class="order-by" id="name" scope="col">Nome</th>
-                    <th class="order-by" id="phone_number" scope="col">Telefone</th>
-                    <th class="order-by" id="level" scope="col">Nível de acesso</th>
-                    <th class="order-by" id="email" scope="col">Email</th>
-                    <th class="" id="email" scope="col">Departamentos/Funcionários</th>
-                    <th class="order-by" id="created_at" scope="col">Data Criação</th>
-                    <th scope="col">Ações</th>
+                    <th class="bg-info-subtle" id="id" scope="col">
+                        <div class="content order-by">
+                            ID
+                        </div>
+                    </th>
+                    <th class="bg-info-subtle" id="name" scope="col">
+                        <div class="content order-by">
+                            Nome
+                        </div>
+                    </th>
+                    <th class="bg-info-subtle" id="phone_number" scope="col">
+                        <div class="content order-by">
+                            Telefone
+                        </div>
+                    </th>
+                    <th class="bg-info-subtle" id="level" scope="col">
+                        <div class="content order-by">
+                            Nível de acesso
+                        </div>
+                    </th>
+                    <th class="bg-info-subtle" id="email" scope="col">
+                        <div class="content order-by">
+                            Email
+                        </div>
+                    </th>
+                    <th class="bg-info-subtle" id="" scope="col">
+                            Departamentos/Funcionários
+                    </th>
+                    <th class="bg-info-subtle" id="reports_count" scope="col">
+                        <div class="content order-by">
+                            QTD Relatórios
+                        </div>
+                    </th>
+                    <th class="bg-info-subtle" id="created_at" scope="col">
+                        <div class="content order-by">
+                            Data Criação
+                        </div>
+                    </th>
+                    <th class="bg-info-subtle" scope="col">Ações</th>
                 </tr>
                 </thead>
                 <tbody class="text-center">

@@ -2,29 +2,47 @@
 
 @section('scripts')
     <script type="module" src="{{ asset('js/main/script.js') }}"></script>
+    <script src="{{ asset('js/main/helpers.js') }}"></script>
     <script src="{{ asset('js/pages/departments.js') }}"></script>
 
 @endsection
 
 @section('conteudo')
-    <div class="container mt-3">
+    <div class="container mt-lg-5">
         <div class="mb-3 d-flex justify-content-around">
-            <button class="btn btn-outline-success" id="new-department" >Adicionar Novo</button>
-            <x-input-search-filter route="user.index"/>
+            <button class="btn btn-outline-success" id="new-department">Adicionar Novo</button>
+            <x-input-search-filter :switch="false"/>
             <x-input-clear-filters route="user.index"/>
         </div>
         <div class="table-wrapper mb-1 bg-body-tertiary">
             <table id="departments-table" class="table table-striped table-hover">
+
                 <thead>
                 <tr>
-                    <th class="order-by" id="id" scope="col">ID</th>
-                    <th class="order-by" id="name" scope="col">Nome</th>
-                    <th class="order-by" id="requesters_count" scope="col">Funcionários</th>
-                    <th class="order-by" id="created_at" scope="col">Data Criação</th>
-                    <th scope="col">Ações</th>
+                    <th class="bg-info-subtle" id="id" scope="col">
+                        <div class="content order-by">
+                            ID
+                        </div>
+                    </th>
+                    <th class="bg-info-subtle" id="name" scope="col">
+                        <div class="content order-by">
+                            Nome
+                        </div>
+                    </th>
+                    <th class="bg-info-subtle" id="requesters_count" scope="col">
+                        <div class="content order-by">
+                            Funcionários
+                        </div>
+                    </th>
+                    <th class="bg-info-subtle" id="created_at" scope="col">
+                        <div class="content order-by">
+                            Data Criação
+                        </div>
+                    </th>
+                    <th class="bg-info-subtle" scope="col">Ações</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-center">
 
                 </tbody>
             </table>

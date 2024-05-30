@@ -70,6 +70,7 @@ class DepartmentController extends Controller
 
                 $departments->where(function ($query) use ($data) {
                     $query->where('name', 'like', '%' . $data['filter_search'] . '%');
+                    $query->orWhere('id', 'like', '%' . $data['filter_search'] . '%');
                 });
             }
             $departments->orderBy($data['order_by'] ?? 'created_at', $data['order_direction'] ?? 'desc');

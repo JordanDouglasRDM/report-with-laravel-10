@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
-
+    let paginateOut = {};
     let filters = '';
     let orderBy = '';
     let orderDirection = 'desc';
+    let requesters = {};
 
     const loadingModal = window.loading();
     const modalRequester = new bootstrap.Modal(document.getElementById('modal-requester'));
@@ -11,6 +12,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const newButton = document.getElementById('new-requester');
     const newButtonSubmit = document.getElementById('submit-form-new');
     const deleteButton = document.getElementById('delete-button-requester');
+    const searchButton = document.getElementById('form-search_button');
+    const searchInput = document.getElementById('form-search_input');
+
+    const divOrderBy = addImagesFilters();
 
     deleteButton.addEventListener('click', function (event) {
         event.preventDefault();
@@ -57,8 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const response = await axios.delete('/requester/' + id);
             toast.fire({
                 icon: "success",
-                title: "Departamento excluido com sucesso!",
-                text: response.data.message,
+                title: response.data.message,
                 timer: 2500
             });
             modalRequester.hide();
@@ -90,12 +94,18 @@ document.addEventListener('DOMContentLoaded', function () {
             const response = await axios.get('/requester/get', {
                 params: request
             });
-            const requesters = response.data.data;
+            requesters = response.data.data;
 
             if (requesters.length < 1) {
-                throw new Error('Nenhum registro encontrado');
+                toast.fire({
+                    icon: "warning",
+                    title: "Nenhum registro encontrado",
+                    timer: 2500
+                });
+                return;
             }
 
+            paginateOut = response.data.data;
             mountTableUsers(requesters);
             mountShower(requesters);
 
@@ -121,49 +131,40 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function orderData() {
-        const ths = document.querySelectorAll('.order-by');
-        ths.forEach((th) => {
-            th.classList.remove('d-flex', 'justify-content-between');
-        });
-        ths.forEach((th) => {
-            th.addEventListener('click', () => {
-                ths.forEach((th) => {
-                    th.classList.remove('d-flex', 'justify-content-between');
-                });
-                if (orderBy === th.id) {
-                    if (orderDirection === 'asc') {
-                        orderDirection = 'desc';
-                        filterImg.classList.remove('align-self-end');
-                        filterImg.classList.add('align-self-baseline');
-                        filterImg.src = '/assets/img/filter-down.svg';
+        divOrderBy.forEach((div) => {
+            div.addEventListener('click', () => {
+                document.querySelectorAll('.filter-button-icon-none').forEach((sp) => {
+                    sp.classList.remove('filter-button-icon-none');
+                })
+                if (requesters.length > 0) {
+                    const th = div.closest('th');
+                    div.querySelector('span').classList.add('filter-button-icon-none');
+                    if (orderBy === th.id) {
+                        if (orderDirection === 'asc') {
+                            orderDirection = 'desc';
+                            filterImg.src = '/assets/img/filter-up.svg';
 
+                        } else {
+                            orderDirection = 'asc';
+                            filterImg.src = '/assets/img/filter-down.svg';
+                        }
                     } else {
-                        orderDirection = 'asc';
-                        filterImg.classList.add('align-self-end');
-                        filterImg.classList.remove('align-self-baseline');
+                        orderBy = th.id;
                         filterImg.src = '/assets/img/filter-up.svg';
                     }
-                } else {
-                    orderBy = th.id;
-                    filterImg.classList.remove('align-self-end');
-                    filterImg.classList.add('align-self-baseline');
-                    filterImg.src = '/assets/img/filter-down.svg';
+                    div.appendChild(filterImg);
+                    getAll({
+                        order_by: orderBy,
+                        order_direction: orderDirection,
+                        per_page: paginateOut.per_page
+                    });
                 }
-                th.classList.add('d-flex', 'justify-content-between')
-                th.appendChild(filterImg);
-                getAll({
-                    order_by: orderBy,
-                    order_direction: orderDirection
-                });
             });
-        })
+        });
     }
 
 
     function searchData() {
-        const searchButton = document.getElementById('form-search_button');
-        const searchInput = document.getElementById('form-search_input');
-
         searchButton.addEventListener('click', (event) => {
             event.preventDefault();
             action();
@@ -186,8 +187,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function clearFilters() {
         const btnFilter = document.getElementById("clear-filters");
         btnFilter.addEventListener("click", (event) => {
+            document.querySelectorAll('.filter-button-icon-none').forEach((sp) => {
+                sp.classList.remove('filter-button-icon-none');
+            })
+            searchInput.value = '';
             event.preventDefault();
             filters = '';
+            orderBy = '';
             filterImg.remove();
             getAll();
         });
@@ -211,6 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td>${data.id}</td>
                 <td>${data.name}</td>
                 <td>${data.department.name}</td>
+                <td>${data.reports_count}</td>
                 <td>${createdAt}</td>
                 <td><a class="edit-button btn btn-outline-warning btn-sm" id="${data.id}">Editar</a></td>
             `;
@@ -237,8 +244,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const response = await axios.post('/requester', request);
             toast.fire({
                 icon: "success",
-                title: "Departamento criado com sucesso!",
-                text: response.data.message,
+                title: response.data.message,
                 timer: 2500
             });
             modalRequesterNew.hide()
@@ -355,8 +361,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             toast.fire({
                 icon: "success",
-                title: "Dados atualizados com sucesso!",
-                text: response.data.message,
+                title: response.data.message,
                 timer: 2500
             });
 

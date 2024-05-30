@@ -29,7 +29,7 @@
                         Departamentos
                     </x-nav-link>
                     <x-nav-link :href="route('requester.index')" :active="request()->routeIs('requester.index')">
-                        Solicitantes
+                        Funcionários
                     </x-nav-link>
                 </div>
             </div>

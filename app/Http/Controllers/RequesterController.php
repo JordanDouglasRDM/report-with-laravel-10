@@ -48,7 +48,7 @@ class RequesterController extends Controller
             return response()->json([
                 'status' => 200,
                 'data' => [],
-                'message' => 'Departamento Criado.'
+                'message' => 'Funcionário criado com sucesso.'
             ], 200);
 
         } catch (\Exception $e) {
@@ -71,6 +71,7 @@ class RequesterController extends Controller
                 $requesters->where(function (Builder $query) use ($data) {
                     $query
                         ->where('requesters.name', 'like', '%' . $data['filter_search'] . '%')
+                        ->orWhere('requesters.id', 'like', '%' . $data['filter_search'] . '%')
                         ->orWhereHas('department', function (Builder $query) use ($data) {
                             $query->where('name', 'like', '%' . $data['filter_search'] . '%');
                         });
@@ -91,6 +92,7 @@ class RequesterController extends Controller
             $requesters = $requesters
                 ->where('requesters.user_id', auth()->guard()->user()->id)
                 ->with(['department:id,name'])
+                ->withCount(['reports'])
                 ->get();
 
             if (!$requesters) {

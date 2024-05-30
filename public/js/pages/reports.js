@@ -15,6 +15,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('form-search_input');
 
     document.querySelector('.dropdown-toggle').classList.add('disabled');
+    function showTooltipSwitch (){
+        const tooltipSwitch = document.getElementById('tooltip-switch');
+        const tool = new bootstrap.Tooltip(tooltipSwitch);
+
+        tooltipSwitch.addEventListener('mouseover', function (event) {
+            tool.show();
+        })
+        tooltipSwitch.addEventListener('mouseout', function (event) {
+            tool.hide();
+        })
+    }
+    showTooltipSwitch();
 
     const toast = Swal.mixin({
         toast: true,
@@ -212,9 +224,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         modalBody.innerHTML = `
                 <div class="mb-3">
-                    <label for="requester_name" class="form-label">Solicitante</label>
+                    <label for="requester_name" class="form-label">Funcionário</label>
                     <input type="text" class="form-control bg-body rounded" name="requester_id" id="requester_name_search"
-                           placeholder="Pesquise por um solicitante"
+                           placeholder="Pesquise por um Funcionário"
                            autocomplete="off"
                     >
                     <ul class="list-group position-absolute d-none" id="requesters_name_list">
@@ -481,7 +493,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         modalBody.innerHTML = `
                 <div class="mb-3">
-                    <label for="requester_name" class="form-label">Solicitante</label>
+                    <label for="requester_name" class="form-label">Funcionário</label>
                     <input type="text" class="form-control bg-body rounded" name="requester_name" id="requester_name_search"
                            placeholder="Digite seu nome"
                            data-requester-id="${report.requester.id}"

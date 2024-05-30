@@ -4,9 +4,14 @@ document.addEventListener('DOMContentLoaded', function () {
     let filters = '';
     let orderBy = '';
     let orderDirection = 'desc';
+    let users = [];
     const loadingModal = window.loading();
     const modalUser = new bootstrap.Modal(document.getElementById('modal-user'));
     const filterImg = document.createElement('img');
+    const searchButton = document.getElementById('form-search_button');
+    const searchInput = document.getElementById('form-search_input');
+
+    const divOrderBy = addImagesFilters();
 
     //paginate
     const previousPage = document.getElementById('previous-page');
@@ -44,49 +49,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    function mountButtonsPage(paginate) {
-        if (paginate.to !== null) {
-            const paginationContainer = document.querySelector('.pagination');
-            const links = paginate.links;
-
-            while (paginationContainer.children.length > 2) {
-                paginationContainer.removeChild(paginationContainer.children[1]);
-            }
-
-            links.forEach((link, index) => {
-                if (index > 0 && index < links.length - 1) {
-                    const pageItem = document.createElement('li');
-                    pageItem.classList.add('page-item');
-                    if (link.active) {
-                        pageItem.classList.add('active');
-                    }
-
-                    const pageButton = document.createElement('button');
-                    pageButton.classList.add('page-link');
-                    pageButton.classList.add('pages');
-                    pageButton.innerText = link.label;
-
-                    pageItem.appendChild(pageButton);
-                    paginationContainer.insertBefore(pageItem, paginationContainer.children[paginationContainer.children.length - 1]);
-                }
-            });
-        }
-    }
-
-
-    function mountButtonsNavigate(paginate) {
-        if (paginate.current_page === 1) {
-            previousPage.classList.add('disabled');
-        } else {
-            previousPage.classList.remove('disabled');
-        }
-        if (paginate.current_page === paginate.last_page) {
-            nextPage.classList.add('disabled');
-        } else {
-            nextPage.classList.remove('disabled');
-        }
-    }
-
     function canNavigate(paginate, type) {
         if (paginate.to !== null) {
             if (type === 'previous') {
@@ -115,17 +77,22 @@ document.addEventListener('DOMContentLoaded', function () {
             const response = await axios.get('/user/get', {
                 params: request
             });
-            const users = response.data.data.data;
+            users = response.data.data.data;
 
             if (users.length < 1) {
-                throw new Error('Nenhum registro encontrado');
+                toast.fire({
+                    icon: "warning",
+                    title: "Nenhum registro encontrado",
+                    timer: 2500
+                });
+                return;
             }
 
             const paginate = response.data.data;
             paginateOut = paginate;
             mountTableUsers(users);
             mountShower(paginate);
-            mountButtonsNavigate(paginate);
+            mountButtonsNavigate(previousPage, nextPage, paginate);
             mountButtonsPage(paginate);
 
         } catch (error) {
@@ -150,49 +117,40 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function orderData() {
-        const ths = document.querySelectorAll('.order-by');
-        ths.forEach((th) => {
-            th.classList.remove('d-flex', 'justify-content-between');
-        });
-        ths.forEach((th) => {
-            th.addEventListener('click', () => {
-                ths.forEach((th) => {
-                    th.classList.remove('d-flex', 'justify-content-between');
-                });
-                if (orderBy === th.id) {
-                    if (orderDirection === 'asc') {
-                        orderDirection = 'desc';
-                        filterImg.classList.remove('align-self-end');
-                        filterImg.classList.add('align-self-baseline');
-                        filterImg.src = '/assets/img/filter-down.svg';
+        divOrderBy.forEach((div) => {
+            div.addEventListener('click', () => {
+                document.querySelectorAll('.filter-button-icon-none').forEach((sp) => {
+                    sp.classList.remove('filter-button-icon-none');
+                })
+                if (users.length > 0) {
+                    const th = div.closest('th');
+                    div.querySelector('span').classList.add('filter-button-icon-none');
+                    if (orderBy === th.id) {
+                        if (orderDirection === 'asc') {
+                            orderDirection = 'desc';
+                            filterImg.src = '/assets/img/filter-up.svg';
 
+                        } else {
+                            orderDirection = 'asc';
+                            filterImg.src = '/assets/img/filter-down.svg';
+                        }
                     } else {
-                        orderDirection = 'asc';
-                        filterImg.classList.add('align-self-end');
-                        filterImg.classList.remove('align-self-baseline');
+                        orderBy = th.id;
                         filterImg.src = '/assets/img/filter-up.svg';
                     }
-                } else {
-                    orderBy = th.id;
-                    filterImg.classList.remove('align-self-end');
-                    filterImg.classList.add('align-self-baseline');
-                    filterImg.src = '/assets/img/filter-down.svg';
+                    div.appendChild(filterImg);
+                    getAllUser({
+                        order_by: orderBy,
+                        order_direction: orderDirection,
+                        per_page: paginateOut.per_page
+                    });
                 }
-                th.classList.add('d-flex', 'justify-content-between')
-                th.appendChild(filterImg);
-                getAllUser({
-                    order_by: orderBy,
-                    order_direction: orderDirection,
-                    per_page: paginateOut.per_page
-                });
             });
-        })
+        });
     }
 
 
     function searchData() {
-        const searchButton = document.getElementById('form-search_button');
-        const searchInput = document.getElementById('form-search_input');
 
         searchButton.addEventListener('click', (event) => {
             event.preventDefault();
@@ -216,8 +174,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function clearFilters() {
         const btnFilter = document.getElementById("clear-filters");
         btnFilter.addEventListener("click", (event) => {
+            document.querySelectorAll('.filter-button-icon-none').forEach((sp) => {
+                sp.classList.remove('filter-button-icon-none');
+            })
+            searchInput.value = '';
             event.preventDefault();
             filters = '';
+            orderBy = '';
             filterImg.remove();
             getAllUser();
         });
@@ -259,6 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td>${user.level}</td>
                 <td>${user.email}</td>
                 <td>${user.departments_count}/${user.requesters_count}</td>
+                <td>${user.reports_count}</td>
                 <td>${createdAt}</td>
                 <td><a class="edit-button btn btn-outline-warning btn-sm" id="${user.id}">Editar</a></td>
             `;
@@ -345,7 +309,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const newSubmitHandler = async (event) => {
             event.preventDefault();
             const user = getDataUserChanged();
-            console.log(user)
             await updateUserById(user, userId);
         };
 
@@ -377,8 +340,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             toast.fire({
                 icon: "success",
-                title: "Dados atualizados com sucesso!",
-                text: response.data.message,
+                title: response.data.message,
                 timer: 2500
             });
 

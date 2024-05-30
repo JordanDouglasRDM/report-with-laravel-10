@@ -1,16 +1,3 @@
-showTooltipSwitch();
-function showTooltipSwitch (){
-    const tooltipSwitch = document.getElementById('tooltip-switch');
-    const tool = new bootstrap.Tooltip(tooltipSwitch);
-
-    tooltipSwitch.addEventListener('mouseover', function (event) {
-        tool.show();
-    })
-    tooltipSwitch.addEventListener('mouseout', function (event) {
-        tool.hide();
-    })
-}
-
 const toast = initializeToast();
 window.loading = function () {
     const modalFind = document.getElementById('my-modal-loading');

@@ -26,7 +26,7 @@ class GetAllUserRequest extends FormRequest
         return [
             'per_page' => 'nullable|numeric|max:100',
             'filter_search' => 'nullable|string|max:100',
-            'order_by' => 'nullable|in:id,name,email,phone_number,level,created_at',
+            'order_by' => 'nullable|in:id,name,email,phone_number,level,created_at,reports_count',
             'order_direction' => 'nullable|in:asc,desc',
         ];
     }

@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let filters = '';
     let orderBy = '';
     let orderDirection = 'desc';
+    let departments = [];
+    let paginateOut = {};
 
     const loadingModal = window.loading();
     const modalDepartment = new bootstrap.Modal(document.getElementById('modal-department'));
@@ -11,6 +13,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const newButton = document.getElementById('new-department');
     const newButtonSubmit = document.getElementById('submit-form-new');
     const deleteButton = document.getElementById('delete-button');
+    const searchButton = document.getElementById('form-search_button');
+    const searchInput = document.getElementById('form-search_input');
+
+    const divOrderBy = addImagesFilters();
 
     deleteButton.addEventListener('click', function (event) {
         event.preventDefault();
@@ -30,19 +36,17 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-
     })
 
     newButtonSubmit.addEventListener('click', function (event) {
         event.preventDefault();
-        const department = getDataDepartmentChanged()
+        const department = getDataDepartmentChanged('new_name')
         store(department)
     })
     newButton.addEventListener('click', function (event) {
         event.preventDefault();
         modalDepartmentNew.show();
         mountModalDepartmentNew();
-
     })
 
     getAll();
@@ -58,8 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const departments = response.data.data;
             toast.fire({
                 icon: "success",
-                title: "Departamento excluido com sucesso!",
-                text: response.data.message,
+                title: response.data.message,
                 timer: 2500
             });
             modalDepartment.hide();
@@ -91,12 +94,17 @@ document.addEventListener('DOMContentLoaded', function () {
             const response = await axios.get('/department/get', {
                 params: request
             });
-            const departments = response.data.data;
+            departments = response.data.data;
 
             if (departments.length < 1) {
-                throw new Error('Nenhum registro encontrado');
+                toast.fire({
+                    icon: "warning",
+                    title: "Nenhum registro encontrado",
+                    timer: 2500
+                });
+                return;
             }
-
+            paginateOut = response.data.data;
             mountTableUsers(departments);
             mountShower(departments);
 
@@ -122,48 +130,39 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function orderData() {
-        const ths = document.querySelectorAll('.order-by');
-        ths.forEach((th) => {
-            th.classList.remove('d-flex', 'justify-content-between');
-        });
-        ths.forEach((th) => {
-            th.addEventListener('click', () => {
-                ths.forEach((th) => {
-                    th.classList.remove('d-flex', 'justify-content-between');
-                });
-                if (orderBy === th.id) {
-                    if (orderDirection === 'asc') {
-                        orderDirection = 'desc';
-                        filterImg.classList.remove('align-self-end');
-                        filterImg.classList.add('align-self-baseline');
-                        filterImg.src = '/assets/img/filter-down.svg';
+        divOrderBy.forEach((div) => {
+            div.addEventListener('click', () => {
+                document.querySelectorAll('.filter-button-icon-none').forEach((sp) => {
+                    sp.classList.remove('filter-button-icon-none');
+                })
+                if (departments.length > 0) {
+                    const th = div.closest('th');
+                    div.querySelector('span').classList.add('filter-button-icon-none');
+                    if (orderBy === th.id) {
+                        if (orderDirection === 'asc') {
+                            orderDirection = 'desc';
+                            filterImg.src = '/assets/img/filter-up.svg';
 
+                        } else {
+                            orderDirection = 'asc';
+                            filterImg.src = '/assets/img/filter-down.svg';
+                        }
                     } else {
-                        orderDirection = 'asc';
-                        filterImg.classList.add('align-self-end');
-                        filterImg.classList.remove('align-self-baseline');
+                        orderBy = th.id;
                         filterImg.src = '/assets/img/filter-up.svg';
                     }
-                } else {
-                    orderBy = th.id;
-                    filterImg.classList.remove('align-self-end');
-                    filterImg.classList.add('align-self-baseline');
-                    filterImg.src = '/assets/img/filter-down.svg';
+                    div.appendChild(filterImg);
+                    getAll({
+                        order_by: orderBy,
+                        order_direction: orderDirection,
+                        per_page: paginateOut.per_page
+                    });
                 }
-                th.classList.add('d-flex', 'justify-content-between')
-                th.appendChild(filterImg);
-                getAll({
-                    order_by: orderBy,
-                    order_direction: orderDirection
-                });
             });
-        })
+        });
     }
 
-
     function searchData() {
-        const searchButton = document.getElementById('form-search_button');
-        const searchInput = document.getElementById('form-search_input');
 
         searchButton.addEventListener('click', (event) => {
             event.preventDefault();
@@ -187,8 +186,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function clearFilters() {
         const btnFilter = document.getElementById("clear-filters");
         btnFilter.addEventListener("click", (event) => {
+            document.querySelectorAll('.filter-button-icon-none').forEach((sp) => {
+                sp.classList.remove('filter-button-icon-none');
+            })
+            searchInput.value = '';
             event.preventDefault();
             filters = '';
+            orderBy = '';
             filterImg.remove();
             getAll();
         });
@@ -239,8 +243,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const departments = response.data.data;
             toast.fire({
                 icon: "success",
-                title: "Departamento criado com sucesso!",
-                text: response.data.message,
+                title: response.data.message,
                 timer: 2500
             });
             modalDepartmentNew.hide()
@@ -262,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function () {
         modalBody.innerHTML = `
                 <div class="mb-3">
                     <label for="name" class="form-label">Nome</label>
-                    <input type="text" class="form-control bg-body rounded" name="name" id="name"
+                    <input type="text" class="form-control bg-body rounded" name="name" id="new_name"
                            placeholder="Digite o nome do departamento"
                            autocomplete="off"
                     >
@@ -286,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <label for="name" class="form-label">Nome</label>
                     <input type="text" class="form-control bg-body rounded" name="name" id="name"
                            placeholder="Digite seu nome"
-                           value="${data.name ?? ''}"
+                           value="${data.name}"
                            autocomplete="off"
                     >
                 </div>
@@ -307,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const submitButton = document.getElementById('submit-form');
         const newSubmitHandler = async (event) => {
             event.preventDefault();
-            const data = getDataDepartmentChanged();
+            const data = getDataDepartmentChanged('name');
             await updateById(data, departmentId);
         };
 
@@ -316,10 +319,9 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('submit-form').addEventListener('click', newSubmitHandler);
     }
 
-    function getDataDepartmentChanged() {
-        const name = document.querySelector('input#name').value;
+    function getDataDepartmentChanged(nameId) {
         return {
-            name: name,
+            name: document.querySelector('input#' + nameId).value,
         };
     }
 
@@ -331,8 +333,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             toast.fire({
                 icon: "success",
-                title: "Dados atualizados com sucesso!",
-                text: response.data.message,
+                title: response.data.message,
                 timer: 2500
             });
 

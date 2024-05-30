@@ -32,7 +32,7 @@
                     </th>
                     <th id="requester_name" scope="col" style="width: 200px" class="bg-info-subtle">
                         <div class="content order-by">
-                            Solicitante
+                            Funcionário
                         </div>
                     </th>
                     <th id="abstract" scope="col" style="width: 350px" class="bg-info-subtle">

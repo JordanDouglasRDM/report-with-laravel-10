@@ -41,7 +41,8 @@ class UserController extends Controller
                 });
             }
             $users->orderBy($data['order_by'] ?? 'created_at', $data['order_direction'] ?? 'desc');
-            $users->withCount(['requesters', 'departments']);
+            $users->withCount(['requesters', 'departments'])
+                ->withCount('reports');
 
             $users = $users->paginate($data['per_page'] ?? 10)->onEachSide(1);
 

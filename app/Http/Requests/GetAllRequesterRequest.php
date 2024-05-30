@@ -25,7 +25,7 @@ class GetAllRequesterRequest extends FormRequest
     {
         return [
             'filter_search' => 'nullable|string|max:100',
-            'order_by' => 'nullable|in:id,name,created_at,department',
+            'order_by' => 'nullable|in:id,name,created_at,department,reports_count',
             'order_direction' => 'nullable|in:asc,desc',
         ];
     }
