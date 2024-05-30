@@ -16,9 +16,26 @@ class PopulateCascadeSeeder extends Seeder
     /**
      * Run the database seeds.
      */
+    public function run(): void
+    {
+        $this->users(9);
+    }
     private function users(int $qty): void
     {
         for ($i = 1; $i <= $qty; $i++) {
+            if ($i == 1) {
+                $user = User::create([
+                    'name' => 'Jordan Douglas Rosa de Melo',
+                    'email' => 'jordandouglas8515@gmail.com',
+                    'email_verified_at' => now(),
+                    'password' => Hash::make('455265*Aj'),
+                    'remember_token' => Str::random(10),
+                    'phone_number' => '(18) 99745-5265',
+                    'level' => 'admin'
+                ]);
+
+                $this->departments(10, $user);
+            }
             $firstName = fake()->firstName();
             $lastName = fake()->lastName();
             $email = $firstName . '.' . $lastName . Str::random(3) . '@gmail.com';
@@ -30,7 +47,7 @@ class PopulateCascadeSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'remember_token' => Str::random(10),
                 'phone_number' => fake()->phoneNumber(),
-                'level' => fake()->randomElement(['admin', 'operator']),
+                'level' => 'operator',
                 'created_at' => fake()->dateTimeBetween(),
             ]);
 
@@ -84,10 +101,9 @@ class PopulateCascadeSeeder extends Seeder
                 'user_id' => $department->user_id,
                 'created_at' => fake()->dateTimeBetween($department->created_at, 'now'),
             ]);
-            $this->reports(fake()->numberBetween(30, 50), $requester);
+            $this->reports(fake()->numberBetween(5, 20), $requester);
         }
     }
-
     private function reports(int $qtyPerRequester, Requester $requester): void
     {
         for ($i = 1; $i <= $qtyPerRequester; $i++) {
@@ -101,9 +117,5 @@ class PopulateCascadeSeeder extends Seeder
                 'created_at' => fake()->dateTimeBetween($requester->created_at, 'now'),
             ]);
         }
-    }
-    public function run(): void
-    {
-        $this->users(20);
     }
 }
