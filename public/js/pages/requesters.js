@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td>${data.department.name}</td>
                 <td>${data.reports_count}</td>
                 <td>${createdAt}</td>
-                <td><a class="edit-button btn btn-outline-warning btn-sm" id="${data.id}">Editar</a></td>
+                <td><a class="edit-button btn btn-outline-secondary btn-sm" id="${data.id}">Editar</a></td>
             `;
             tableBody.appendChild(tr);
         });

@@ -465,12 +465,59 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td class="align-content-around">${report.requester.name}</td>
                 <td class="align-content-around">${report.abstract}</td>
                 <td class="align-content-around text-justify" style="text-align: justify">${report.description}</td>
-                <td class="align-content-around">${report.status}</td>
-                <td class="align-content-around">${report.priority}</td>
+                <td class="align-content-around"><p class="status-text rounded-5 border">${report.status}</p></td>
+                <td class="align-content-around">
+                <div class="d-flex justify-content-around align-content-center">
+                    <p class="priority-text">${report.priority}</p>
+                    <div>
+                        <img class="img-priority rounded-5">
+                    </div>
+                </div>
+                </td>
                 <td class="align-content-around">${createdAt}</td>
-                <td class="align-content-around"><a class="edit-button btn btn-outline-warning btn-sm" id="${report.id}">Editar</a></td>
+                <td class="align-content-around"><a class="edit-button btn btn-outline-secondary btn-sm" id="${report.id}">Editar</a></td>
             `;
             tableBody.appendChild(tr);
+        });
+
+        document.querySelectorAll('.priority-text').forEach((tx) => {
+            const paiEmComum = tx.parentNode;
+            const img = paiEmComum.querySelector('.img-priority');
+            img.classList.remove('pulse');
+
+            switch (tx.textContent) {
+                case "high":
+                    img.classList.add('pulse');
+                    img.src = '/assets/img/star-high.svg';
+                    break;
+                case 'medium':
+                    img.src = '/assets/img/star-medium.svg';
+                    break;
+                case 'low':
+                    img.src = '/assets/img/star-low.svg';
+                    break;
+                case 'note':
+                    img.classList.remove('rounded-5');
+                    img.src = '/assets/img/note.svg';
+                    break;
+            }
+
+        });
+
+        document.querySelectorAll('.status-text').forEach((tx)=> {
+            tx.classList.remove('border-warning', 'text-warning');
+            switch (tx.textContent) {
+                case "in_progress":
+                    tx.classList.add('border-warning', 'text-warning');
+                    break;
+                case 'completed':
+                    tx.classList.add('border-success', 'text-success');
+                    tx.closest('tr').querySelector('.img-priority').classList.remove('pulse');
+                    break;
+                case 'pending':
+                    tx.classList.add('border-danger', 'text-danger');
+                    break;
+            }
         });
 
         prepareEventClickOpenModal();

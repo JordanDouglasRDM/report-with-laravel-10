@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td>${user.departments_count}/${user.requesters_count}</td>
                 <td>${user.reports_count}</td>
                 <td>${createdAt}</td>
-                <td><a class="edit-button btn btn-outline-warning btn-sm" id="${user.id}">Editar</a></td>
+                <td><a class="edit-button btn btn-outline-secondary btn-sm" id="${user.id}">Editar</a></td>
             `;
             tableBody.appendChild(tr);
         });
