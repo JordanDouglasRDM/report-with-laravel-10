@@ -36,6 +36,9 @@
 
             <!-- Settings Dropdown -->
             <div class="tw-hidden sm:tw-flex sm:tw-items-center sm:ms-6">
+                <div>
+                    @include('components.switch-theme')
+                </div>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
@@ -71,7 +74,6 @@
                     </x-slot>
                 </x-dropdown>
             </div>
-
             <!-- Hamburger -->
             <div class="-me-2 tw-flex tw-items-center sm:tw-hidden">
                 <button @click="open = ! open"
@@ -87,7 +89,6 @@
             </div>
         </div>
     </div>
-
     <!-- Responsive Navigation Menu -->
     <div :class="{'tw-block': open, 'tw-hidden': ! open}" class="tw-hidden sm:tw-hidden">
         <div class="tw-pt-2 tw-pb-3 tw-space-y-1">

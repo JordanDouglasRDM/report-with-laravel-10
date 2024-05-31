@@ -1,6 +1,7 @@
 @import "bootstrap.css";
 @import "loader.css";
 @import "toggle-switch.css";
+@import "switch-theme.css";
 
 @tailwind base;
 @tailwind components;
