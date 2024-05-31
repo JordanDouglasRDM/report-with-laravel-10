@@ -16,7 +16,7 @@
     @yield('scripts')
 </head>
 
-<body class="tw-font-sans tw-antialiased" data-bs-theme="dark">
+<body class="tw-font-sans tw-antialiased">
 <div class="modal fade" id="my-modal-loading" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="container">
