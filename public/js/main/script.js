@@ -7,6 +7,8 @@ window.loading = function () {
     });
 }
 
+
+
 window.handleErrorsResponse = function (errorAxios) {
     if (!errorAxios.response) {
         errorAxios = {

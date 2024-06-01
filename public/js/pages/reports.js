@@ -13,6 +13,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const checkbox = document.querySelector('input[type="checkbox"].all');
     const searchButton = document.getElementById('form-search_button');
     const searchInput = document.getElementById('form-search_input');
+    const qtyPending = document.querySelector('.qty-pending');
+    qtyPending.addEventListener('click', function (event) {
+        event.preventDefault();
+
+    });
 
     document.querySelector('.dropdown-toggle').classList.add('disabled');
 
@@ -432,12 +437,12 @@ document.addEventListener('DOMContentLoaded', function () {
             createdAt = createdAt.toLocaleDateString('pt-BR');
 
             tr.innerHTML = `
-                <td class="align-content-around">${report.id}</td>
-                <td class="align-content-around">${report.requester.name}</td>
-                <td class="align-content-around">${report.abstract}</td>
+                <td class="align-middle">${report.id}</td>
+                <td class="align-middle">${report.requester.name}</td>
+                <td class="align-middle">${report.abstract}</td>
                 <td class="align-content-around text-justify" style="text-align: justify">${report.description}</td>
-                <td class="align-content-around"><p class="status-text rounded-5 border">${report.status}</p></td>
-                <td class="align-content-around">
+                <td class="align-middle"><p class="status-text badge rounded-pill">${report.status}</p></td>
+                <td class="align-middle">
                 <div class="d-flex justify-content-around align-content-center">
                     <p class="priority-text">${report.priority}</p>
                     <div>
@@ -445,8 +450,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 </div>
                 </td>
-                <td class="align-content-around">${createdAt}</td>
-                <td class="align-content-around"><a class="edit-button btn btn-outline-secondary btn-sm" id="${report.id}">Editar</a></td>
+                <td class="align-middle">${createdAt}</td>
+                <td class="align-middle"><a class="edit-button btn btn-outline-secondary btn-sm" id="${report.id}">Editar</a></td>
             `;
             tableBody.appendChild(tr);
         });
@@ -476,17 +481,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         document.querySelectorAll('.status-text').forEach((tx) => {
-            tx.classList.remove('border-warning', 'text-warning');
             switch (tx.textContent) {
                 case "in_progress":
-                    tx.classList.add('border-warning', 'text-warning');
+                    tx.classList.add('border-warning', 'text-bg-warning');
                     break;
                 case 'completed':
-                    tx.classList.add('border-success', 'text-success');
+                    tx.classList.add('border-success', 'text-bg-success');
                     tx.closest('tr').querySelector('.img-priority').classList.remove('pulse');
                     break;
                 case 'pending':
-                    tx.classList.add('border-danger', 'text-danger');
+                    tx.classList.add('border-danger', 'text-bg-danger');
                     break;
             }
         });

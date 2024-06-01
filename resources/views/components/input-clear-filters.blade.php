@@ -1,5 +1,5 @@
-@props(['route'])
-
-<a class="btn btn-outline-primary" id="clear-filters">
-    Limpar Filtros
+<a class="btn p-1 pe-0" id="clear-filters">
+    <img id="img-clear-filters" alt=""
+         width="40"
+    >
 </a>

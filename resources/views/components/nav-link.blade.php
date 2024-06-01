@@ -1,4 +1,7 @@
-@props(['active'])
+@props([
+    'active',
+    'badge'
+])
 
 @php
     $classes = ($active ?? false)
@@ -8,4 +11,10 @@
 
 <a style="text-decoration: none;" {{ $attributes->merge(['class' => $classes]) }}>
     {{ $slot }}
+
+    @if($badge)
+        <div class="mt-3 ms-1 position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger qty-pending">
+            99+
+        </div>
+    @endif
 </a>

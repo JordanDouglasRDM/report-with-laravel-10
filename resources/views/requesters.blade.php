@@ -9,8 +9,8 @@
 
 @section('conteudo')
     <div class="container mt-lg-5">
-        <div class="mb-3 d-flex justify-content-around">
-            <button class="btn btn-outline-success" id="new-requester">Adicionar Novo</button>
+        <div class="mb-3 d-flex justify-content-between">
+            <x-add-button id="new-requester" />
             <x-input-search-filter :switch="false"/>
             <x-input-clear-filters route="user.index"/>
         </div>

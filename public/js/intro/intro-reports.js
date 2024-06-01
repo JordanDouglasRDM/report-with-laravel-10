@@ -17,16 +17,6 @@ function startIntroTour() {
                 intro: "Adicione um novo relatório clicando aqui."
             },
             {
-                element: document.querySelector('.dropdown-toggle'),
-                title: 'Por página',
-                intro: "Controle quantos registros deseja exibir por página."
-            },
-            {
-                element: document.querySelector('#filter_date'),
-                title: 'Data',
-                intro: "Selecione uma data para encontrar registros."
-            },
-            {
                 element: document.querySelector('.intro-search-group'),
                 title: 'Pesquisar',
                 intro: "Aqui você pode realizar pesquisas de palavras chaves, códigos e quaisquer outras para encontrar seu relatório",
@@ -35,6 +25,11 @@ function startIntroTour() {
                 element: document.querySelector('#tooltip-switch'),
                 title: 'Pesquisar',
                 intro: "Selecione para poder realizar pesquisas em todas as datas que ocorreram.",
+            },
+            {
+                element: document.querySelector('#filter_date'),
+                title: 'Data',
+                intro: "Selecione uma data para encontrar registros."
             },
             {
                 element: document.querySelector('#clear-filters'),
@@ -52,6 +47,11 @@ function startIntroTour() {
                 intro: "Os dados são exibidos em paginação para um carregamento mais rápido.",
             },
             {
+                element: document.querySelector('.dropdown-toggle'),
+                title: 'Por página',
+                intro: "Controle quantos registros deseja exibir por página."
+            },
+            {
                 element: document.querySelector('.intro-paginate-results'),
                 title: 'Paginação',
                 intro: "Veja rapidamente a quantidade de registros encontrados.",
@@ -63,7 +63,7 @@ function startIntroTour() {
             },
             {
                 title: 'Aproveite',
-                intro: "Você pode acessar este tutorial no seu perfil, procure por tutoriais.",
+                intro: "Você pode acessar este tutorial novamente, vá em seu perfil e procure por tutoriais.",
             }
         ]
     }).start();

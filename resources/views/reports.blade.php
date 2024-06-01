@@ -8,17 +8,18 @@
 
 @section('conteudo')
     <div class="container-fluid mt-lg-5" style="width: 90%">
-        <div class="mb-3 d-flex justify-content-around">
-            <button class="btn btn-outline-success" id="new-report">Adicionar Novo</button>
-            <x-input-perpage route="report.index"/>
 
-            <div class="form-group">
-                <input type="date" class="form-control" id="filter_date">
+            <div class="mb-3 d-flex justify-content-between">
+                <x-add-button id="new-report"/>
+
+                <x-input-search-filter :switch="true"/>
+                <div class="form-group">
+                    <input type="date" class="form-control" id="filter_date">
+                </div>
+
+                <x-input-clear-filters/>
             </div>
-            <x-input-search-filter :switch="true"/>
 
-            <x-input-clear-filters route="report.index"/>
-        </div>
         <div class="table-wrapper mb-1 bg-body-tertiary rounded-4">
             <table id="reports-table" class="table table-bordered table-hover">
                 <thead>
@@ -62,8 +63,8 @@
                 </tbody>
             </table>
         </div>
+        <x-pagination-asynchronous/>
         <div class="container">
-            <x-pagination-asynchronous/>
         </div>
     </div>
 

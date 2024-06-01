@@ -9,8 +9,7 @@
 
 @section('conteudo')
     <div class="container-fluid mt-lg-5" style="width: 90%">
-        <div class="mb-3 d-flex justify-content-around">
-            <x-input-perpage route="user.index"/>
+        <div class="mb-3 d-flex justify-content-between">
             <x-input-search-filter :switch="false"/>
             <x-input-clear-filters route="user.index"/>
         </div>
@@ -64,9 +63,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="container">
-            <x-pagination-asynchronous/>
-        </div>
+        <x-pagination-asynchronous/>
     </div>
 
     <!-- Modal -->

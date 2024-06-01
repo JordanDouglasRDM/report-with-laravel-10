@@ -7,28 +7,29 @@
                 <!-- Logo -->
                 <div class="shrink-0 tw-flex tw-items-center">
                     <a href="{{ route('report.index') }}">
-{{--                        <img width="96" height="96" src="https://img.icons8.com/nolan/96/graph-report.png" alt="graph-report"/>--}}
-                        <img width="50" height="50" src="https://img.icons8.com/nolan/64/graph-report.png" alt="graph-report"/>
-{{--                        <x-application-logo--}}
-{{--                            class="tw-block tw-h-9 tw-w-auto tw-fill-current tw-text-gray-800 dark:tw-text-gray-200"/>--}}
+                        {{--                        <img width="96" height="96" src="https://img.icons8.com/nolan/96/graph-report.png" alt="graph-report"/>--}}
+                        <img width="50" height="50" src="https://img.icons8.com/nolan/64/graph-report.png"
+                             alt="graph-report"/>
+                        {{--                        <x-application-logo--}}
+                        {{--                            class="tw-block tw-h-9 tw-w-auto tw-fill-current tw-text-gray-800 dark:tw-text-gray-200"/>--}}
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="tw-hidden tw-space-x-8 sm:tw--my-px sm:ms-10 sm:tw-flex">
-                    <x-nav-link :href="route('report.index')" :active="request()->routeIs('report.index')">
+                    <x-nav-link :badge="true" :href="route('report.index')" :active="request()->routeIs('report.index')" class="position-relative">
                         Relatórios
                     </x-nav-link>
 
                     @can('show',\App\Models\User::class)
-                        <x-nav-link :href="route('user.index')" :active="request()->routeIs('user.index')">
+                        <x-nav-link :badge="false" :href="route('user.index')" :active="request()->routeIs('user.index')">
                             Usuários
                         </x-nav-link>
                     @endcan
-                    <x-nav-link :href="route('department.index')" :active="request()->routeIs('department.index')">
+                    <x-nav-link :badge="false" :href="route('department.index')" :active="request()->routeIs('department.index')">
                         Departamentos
                     </x-nav-link>
-                    <x-nav-link :href="route('requester.index')" :active="request()->routeIs('requester.index')">
+                    <x-nav-link :badge="false" :href="route('requester.index')" :active="request()->routeIs('requester.index')">
                         Funcionários
                     </x-nav-link>
                 </div>
