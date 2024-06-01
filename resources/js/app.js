@@ -19,6 +19,7 @@ Alpine.start();
 alterTheme();
 function alterTheme() {
     const switchTheme = document.querySelector(".selector-theme-toggle-button");
+    switchTheme.checked = true;
 
     // Carregar o tema salvo do Local Storage
     const savedTheme = localStorage.getItem('theme');
@@ -42,6 +43,7 @@ function alterTheme() {
         if (imgClear) {
             imgClear.src = `/assets/img/broom-${theme}.png`;
             const anchorElement = imgClear.closest('a');
+
             if (theme === 'dark') {
                 anchorElement.classList.remove('btn-outline-info');
                 anchorElement.classList.add('btn-outline-secondary');
@@ -50,6 +52,22 @@ function alterTheme() {
                 anchorElement.classList.add('btn-outline-info');
             }
         }
+        const formSearchButton = document.getElementById('form-search_button');
+        const inputSearchSwitch = document.getElementById('input-search-switch');
+        if (theme === 'light') {
+            formSearchButton.classList.remove('btn-secondary');
+            formSearchButton.classList.add('btn-outline-secondary');
+
+            inputSearchSwitch.classList.remove('btn-secondary');
+            inputSearchSwitch.classList.add('btn-outline-secondary');
+        } else {
+            formSearchButton.classList.remove('btn-outline-secondary');
+            formSearchButton.classList.add('btn-secondary');
+
+            inputSearchSwitch.classList.remove('btn-outline-secondary');
+            inputSearchSwitch.classList.add('btn-secondary');
+        }
+
 
         // Ajuste do tema para Bootstrap
         body.setAttribute('data-bs-theme', theme);

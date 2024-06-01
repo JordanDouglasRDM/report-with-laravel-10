@@ -14,10 +14,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchButton = document.getElementById('form-search_button');
     const searchInput = document.getElementById('form-search_input');
     const qtyPending = document.querySelector('.qty-pending');
+
     qtyPending.addEventListener('click', function (event) {
         event.preventDefault();
-
+        console.log()
     });
+
+    async function updateQtyPending() {
+        const qty =  await getQtyPending();
+        if(qty > 999) {
+            qtyPending.textContent = '999+';
+        } else {
+            qtyPending.textContent = qty;
+        }
+    }
+
 
     document.querySelector('.dropdown-toggle').classList.add('disabled');
 
@@ -163,6 +174,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    async function getQtyPending() {
+        try {
+            const response = await axios.get('/report/gty/pending/get');
+            return response.data.data.qty_pending;
+
+        } catch (error) {
+            console.error('houve um erro ao recuperar a quantidade de relatórios pendentes', error)
+            return 0;
+        }
+    }
+
     async function selectFilteredRequesters(usage = '') {
 
         let requesterInput = document.getElementById('requester_id');
@@ -291,6 +313,7 @@ document.addEventListener('DOMContentLoaded', function () {
     async function getAllReport(request = {}) {
         try {
             loadingModal.show();
+            updateQtyPending();
             //se eu possuo filtro definido, na nova paginação, permanece com o filtro
             if (filters !== '') {
                 request = Object.assign({}, request, {filter_search: filters});
@@ -587,6 +610,7 @@ document.addEventListener('DOMContentLoaded', function () {
         await selectFilteredRequesters()
         modalReport.show();
     }
+
     const submitButton = document.getElementById('submit-form-report');
     document.getElementById('submit-form-report').addEventListener('click', async (event) => {
         event.preventDefault();

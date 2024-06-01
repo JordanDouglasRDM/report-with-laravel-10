@@ -13,7 +13,7 @@
             </svg>
         </button>
         @if($switch)
-            <button class="btn btn-secondary">
+            <button class="btn btn-secondary" id="input-search-switch">
                 <div class="d-flex">
                     <label class="switch"
                            id="tooltip-switch"

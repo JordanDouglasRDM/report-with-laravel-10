@@ -28,6 +28,30 @@ class ReportController extends Controller
         return view('reports');
     }
 
+    public function getQtyPending()
+    {
+        try {
+            $reports = $this->report
+                ->where('status', 'pending')
+                ->where('created_at', '<=', Carbon::now())
+                ->where('user_id', auth()->user()->id)
+                ->count();
+
+            return response()->json([
+                'status' => 200,
+                'data' => ['qty_pending' => $reports],
+                'message' => 'Registros encontados.'
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Erro interno do servidor',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function getAll(GetAllReportRequest $request)
     {
         try {

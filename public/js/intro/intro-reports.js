@@ -69,7 +69,7 @@ function startIntroTour() {
     }).start();
 }
 window.onload = function() {
-    if (localStorage.getItem('introTourShown') === 'false') {
+    if (localStorage.getItem('introTourShown') === 'false'|| localStorage.getItem('introTourShown') === null) {
         startIntroTour();
         localStorage.setItem('introTourShown', 'true');
     }

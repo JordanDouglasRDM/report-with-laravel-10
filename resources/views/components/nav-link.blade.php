@@ -14,7 +14,7 @@
 
     @if($badge)
         <div class="mt-3 ms-1 position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger qty-pending">
-            99+
+            -
         </div>
     @endif
 </a>

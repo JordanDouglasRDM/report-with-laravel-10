@@ -46,6 +46,7 @@ Route::middleware('level:admin,operator')->group(function () {
     Route::resource('/requester', RequesterController::class);
 
     Route::get('/report/get', [ReportController::class, 'getAll']);
+    Route::get('/report/gty/pending/get', [ReportController::class, 'getQtyPending']);
     Route::resource('/report', ReportController::class);
 });
 
