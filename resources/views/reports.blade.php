@@ -69,7 +69,6 @@
         </div>
     </div>
 
-    <!-- Modal edit -->
     <div class="modal modal-lg fade rounded-3" id="modal-report" tabindex="-1" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -82,24 +81,8 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-danger" id="delete-button-report">Excluir</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="submit-form-new-report" class="btn btn-success">Salvar</button>
                     <button type="button" id="submit-form-report" class="btn btn-success">Salvar alterações</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{--    Modal insert--}}
-    <div class="modal modal-lg fade rounded-3" id="modal-report-new" tabindex="-1" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content" style="width: 800px">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Relatório</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body new-report-modal-body"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" id="submit-form-new-report" class="btn btn-success">Salvar alterações</button>
                 </div>
             </div>
         </div>

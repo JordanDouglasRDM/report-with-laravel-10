@@ -6,16 +6,17 @@ document.addEventListener('DOMContentLoaded', function () {
     let searchOutDate = false;
     let reports = [];
     const loadingModal = window.loading();
-    const modalReport = new bootstrap.Modal(document.getElementById('modal-report'));
-    const modalReportNew = new bootstrap.Modal(document.getElementById('modal-report-new'));
+    let modalReport = new bootstrap.Modal(document.getElementById('modal-report'));
+
     const filterImg = document.createElement('img');
     const filterDate = document.getElementById('filter_date');
-    const checkbox = document.querySelector('input[type="checkbox"]');
+    const checkbox = document.querySelector('input[type="checkbox"].all');
     const searchButton = document.getElementById('form-search_button');
     const searchInput = document.getElementById('form-search_input');
 
     document.querySelector('.dropdown-toggle').classList.add('disabled');
-    function showTooltipSwitch (){
+
+    function showTooltipSwitch() {
         const tooltipSwitch = document.getElementById('tooltip-switch');
         const tool = new bootstrap.Tooltip(tooltipSwitch);
 
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
             tool.hide();
         })
     }
+
     showTooltipSwitch();
 
     const toast = Swal.mixin({
@@ -46,21 +48,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //salvar novo registro
     const newButtonSubmit = document.getElementById('submit-form-new-report');
-    newButtonSubmit.addEventListener('click', function (event) {
+    newButtonSubmit.addEventListener('click', async function (event) {
         event.preventDefault();
         const report = getDataReportChanged();
-        store(report);
+        try {
+            newButtonSubmit.classList.add('disabled');
+            await store(report);
 
+        } finally {
+            setTimeout(() => {
+                newButtonSubmit.classList.remove('disabled');
+            }, 700);
+        }
     });
     //--------------------------
 
     //abrir modal de novo registro
     const newButton = document.getElementById('new-report');
-    newButton.addEventListener('click', function (event) {
+    newButton.addEventListener('click', async function (event) {
         event.preventDefault();
-        modalReportNew.show();
-        mountModalReportNew()
-        selectFilteredRequesters();
+        modalReport.dispose();
+        modalReport = new bootstrap.Modal(document.getElementById('modal-report'));
+        mountModalReport({}, 'inserir');
+        await selectFilteredRequesters();
+        await modalReport.show();
     });
     //-------------------------
 
@@ -87,8 +98,13 @@ document.addEventListener('DOMContentLoaded', function () {
     })
 
     function getDataReportChanged() {
+
+        const requesterInput = document.querySelector('input#requester_id');
+        if (requesterInput.value === '') {
+            requesterInput.removeAttribute('data-requester-id');
+        }
         return {
-            requester_id: document.querySelector('input#requester_name_search').getAttribute('data-requester-id'),
+            requester_id: requesterInput.getAttribute('data-requester-id'),
             abstract: document.querySelector('input#abstract').value,
             description: document.querySelector('textarea#description').value,
             status: document.querySelector('select#status').value,
@@ -129,7 +145,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 title: response.data.message,
                 timer: 2500
             });
-            modalReportNew.hide()
+            modalReport.hide();
+
             getAllReport();
 
         } catch (error) {
@@ -141,9 +158,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    async function selectFilteredRequesters() {
-        const requesterInput = document.getElementById('requester_name_search');
+    async function selectFilteredRequesters(usage = '') {
+
+        let requesterInput = document.getElementById('requester_id');
         const requesterList = document.getElementById('requesters_name_list');
+        if (usage === 'store') {
+            requesterInput = document.querySelector('.new-report#requester_id');
+        }
+
         const requesters = await getAllRequester();
 
         // Adiciona um ouvinte de eventos para o evento 'input'
@@ -184,6 +206,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
 
+
         requesterInput.addEventListener('focusin', function () {
             requesterList.classList.remove('d-none');
         });
@@ -216,57 +239,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 loadingModal.hide();
             }, 300);
         }
-    }
-
-    function mountModalReportNew() {
-        const modalBody = document.querySelector('.new-report-modal-body');
-        modalBody.innerHTML = '';
-
-        modalBody.innerHTML = `
-                <div class="mb-3">
-                    <label for="requester_name" class="form-label">Funcionário</label>
-                    <input type="text" class="form-control bg-body rounded" name="requester_id" id="requester_name_search"
-                           placeholder="Pesquise por um Funcionário"
-                           autocomplete="off"
-                    >
-                    <ul class="list-group position-absolute d-none" id="requesters_name_list">
-                    </ul>
-                </div>
-                <div class="mb-3">
-                    <label for="abstract" class="form-label">Resumo</label>
-                    <input type="tel" class="form-control bg-body rounded" id="abstract"
-                           placeholder="Descreva brevemente o resumo"
-                           autocomplete="off"
-                    >
-                </div>
-                <div class="mb-3">
-                    <label for="description" class="form-label">Descrição</label>
-                    <textarea type="text" class="form-control bg-body rounded" id="description"
-                           placeholder="Detalhe a descrição da solicitação"
-                           autocomplete="off"
-                           style="height: 140px"></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="status" class="form-label">Nível</label>
-                    <select class="form-select" id="status" autocomplete="off">
-                        <option value="pending" selected>Pendente</option>
-                        <option value="completed">Concluido</option>
-                        <option value="in_progress">Em Andamento</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="status" class="form-label">Prioridade</label>
-                    <select class="form-select" id="priority" autocomplete="off">
-                        <option value="low">Baixa</option>
-                        <option value="medium" selected>Média</option>
-                        <option value="high">Alta</option>
-                        <option value="note">Anotação</option>
-                    </select>
-                </div>
-
-        `;
-        selectFilteredRequesters()
-
     }
 
     perPage();
@@ -504,7 +476,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         });
 
-        document.querySelectorAll('.status-text').forEach((tx)=> {
+        document.querySelectorAll('.status-text').forEach((tx) => {
             tx.classList.remove('border-warning', 'text-warning');
             switch (tx.textContent) {
                 case "in_progress":
@@ -533,90 +505,106 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function mountModalReport(report = {}) {
+    function mountModalReport(report = {}, action) {
         const modalBody = document.querySelector('.modal-body');
-        deleteButton.setAttribute('data-report-id', report.id);
         modalBody.innerHTML = '';
+        const insertValues = action === 'inserir';
+
+        const submitFormNewReport = document.getElementById('submit-form-new-report');
+        const submitFormReport = document.getElementById('submit-form-report');
+        if (insertValues) {
+            deleteButton.classList.add('d-none');
+            submitFormNewReport.classList.remove('d-none');
+            submitFormReport.classList.add('d-none');
+        } else {
+            submitFormNewReport.classList.add('d-none');
+
+            submitFormReport.classList.remove('d-none');
+            submitFormReport.setAttribute('data-report-id', report.id);
+
+            deleteButton.classList.remove('d-none');
+            deleteButton.setAttribute('data-report-id', report.id);
+        }
 
         modalBody.innerHTML = `
-                <div class="mb-3">
-                    <label for="requester_name" class="form-label">Funcionário</label>
-                    <input type="text" class="form-control bg-body rounded" name="requester_name" id="requester_name_search"
-                           placeholder="Digite seu nome"
-                           data-requester-id="${report.requester.id}"
-                           value="${report.requester.name ?? ''}"
-                           autocomplete="off"
-                    >
-                    <ul class="list-group position-absolute d-none" id="requesters_name_list">
-                    </ul>
-
-                </div>
-                <div class="mb-3">
-                    <label for="abstract" class="form-label">Resumo</label>
-                    <input type="tel" class="form-control bg-body rounded" id="abstract"
-                           placeholder="Digite seu número de telefone"
-                           value="${report.abstract ?? ''}"
-                           autocomplete="off"
-                    >
-                </div>
-                <div class="mb-3">
-                    <label for="description" class="form-label">Descrição</label>
-                    <textarea type="text" class="form-control bg-body rounded" id="description"
-                           placeholder="Digite seu número de telefone"
-                           autocomplete="off"
-                           style="height: 140px">${report.description ?? ''}</textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="status" class="form-label">Nível</label>
-                    <select class="form-select" id="status" autocomplete="off">
-                        <option value="pending" ${report.status === 'pending' ? 'selected' : ''}>Pendente</option>
-                        <option value="completed" ${report.status === 'completed' ? 'selected' : ''}>Concluido</option>
-                        <option value="in_progress" ${report.status === 'in_progress' ? 'selected' : ''}>Em Andamento</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="status" class="form-label">Prioridade</label>
-                    <select class="form-select" id="priority" autocomplete="off">
-                        <option value="low" ${report.priority === 'low' ? 'selected' : ''}>Baixa</option>
-                        <option value="medium" ${report.priority === 'medium' ? 'selected' : ''}>Média</option>
-                        <option value="high" ${report.priority === 'high' ? 'selected' : ''}>Alta</option>
-                        <option value="note" ${report.priority === 'note' ? 'selected' : ''}>Anotação</option>
-                    </select>
-                </div>
-                <div>
+        <div class="mb-3">
+            <label for="requester_name" class="form-label">Funcionário</label>
+            <input type="text" class="form-control bg-body rounded" name="requester_name" id="requester_id"
+                   placeholder="Digite seu nome"
+                   data-requester-id="${insertValues ? '' : report.requester.id ?? ''}"
+                   value="${insertValues ? '' : report.requester.name ?? ''}"
+                   autocomplete="off"
+            >
+            <ul class="list-group position-absolute d-none" id="requesters_name_list">
+            </ul>
         </div>
-        `;
+        <div class="mb-3">
+            <label for="abstract" class="form-label">Resumo</label>
+            <input type="tel" class="form-control bg-body rounded" id="abstract"
+                   placeholder="Digite seu número de telefone"
+                   value="${insertValues ? '' : report.abstract ?? ''}"
+                   autocomplete="off"
+            >
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Descrição</label>
+            <textarea type="text" class="form-control bg-body rounded" id="description"
+                   placeholder="Digite seu número de telefone"
+                   autocomplete="off"
+                   style="height: 140px">${insertValues ? '' : report.description ?? ''}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="status" class="form-label">Nível</label>
+            <select class="form-select" id="status" autocomplete="off">
+                <option value="pending" ${report.status === 'pending' ? 'selected' : ''}>Pendente</option>
+                <option value="completed" ${report.status === 'completed' ? 'selected' : ''}>Concluído</option>
+                <option value="in_progress" ${report.status === 'in_progress' ? 'selected' : ''}>Em Andamento</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="status" class="form-label">Prioridade</label>
+            <select class="form-select" id="priority" autocomplete="off">
+                <option value="low" ${report.priority === 'low' ? 'selected' : ''}>Baixa</option>
+                <option value="medium" ${report.priority === 'medium' ? 'selected' : ''}>Média</option>
+                <option value="high" ${report.priority === 'high' ? 'selected' : ''}>Alta</option>
+                <option value="note" ${report.priority === 'note' ? 'selected' : ''}>Anotação</option>
+            </select>
+        </div>
+    `;
     }
 
     async function mountModalReportSelected(reportId) {
+        modalReport.dispose();
+        modalReport = new bootstrap.Modal(document.getElementById('modal-report'));
         const report = await getReportById(reportId);
         if (!report) {
             return;
         }
         mountModalReport(report)
-        selectFilteredRequesters()
+        await selectFilteredRequesters()
         modalReport.show();
-        prepareEventClickSubmitFormChanges(reportId);
     }
+    const submitButton = document.getElementById('submit-form-report');
+    document.getElementById('submit-form-report').addEventListener('click', async (event) => {
+        event.preventDefault();
+        const reportId = event.target.getAttribute('data-report-id');
+        const report = getDataReportChanged();
 
-    async function prepareEventClickSubmitFormChanges(reportId) {
-        const submitButton = document.getElementById('submit-form-report');
-        const newSubmitHandler = async (event) => {
-            event.preventDefault();
-            const report = getDataReportChanged();
+        try {
+            submitButton.disabled = true; // Desabilita o botão para evitar cliques repetidos
             await updateReportById(report, reportId);
-        };
-
-        // Remove os ouvintes de evento anteriores
-        submitButton.replaceWith(submitButton.cloneNode(true));
-        document.getElementById('submit-form-report').addEventListener('click', newSubmitHandler);
-    }
+        } finally {
+            setTimeout(() => {
+                submitButton.disabled = false; // Habilita o botão de volta após um curto atraso
+            }, 700);
+        }
+    });
 
     async function updateReportById(request, reportId) {
         try {
             const response = await axios.put('report/' + reportId, request);
-            modalReport.hide();
 
+            modalReport.hide();
             await getAllReport({page: paginateOut.current_page});
 
             toast.fire({

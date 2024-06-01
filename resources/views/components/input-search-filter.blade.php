@@ -21,7 +21,7 @@
                        data-bs-placement="top"
                        data-bs-title="Marque para pesquisar em todas as datas"
                 >
-                    <input type="checkbox">
+                    <input type="checkbox" class="all">
                     <span class="slider round"></span>
                 </label>
             </div>
