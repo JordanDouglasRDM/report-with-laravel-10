@@ -307,7 +307,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (request.filter_date === undefined) {
                 request = Object.assign({}, request, {filter_date: filterDate.value});
             }
-            console.log(request)
             const response = await axios.get('/report/get', {
                 params: request
             });

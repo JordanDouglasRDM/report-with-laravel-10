@@ -124,6 +124,7 @@ class RequesterController extends Controller
                 ->where('user_id', auth()->guard()->user()->id)
                 ->where('id', $id)
                 ->with(['department'])
+                ->withCount(['reports'])
                 ->first();
 
 

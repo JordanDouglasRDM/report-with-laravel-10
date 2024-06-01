@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const filterImg = document.createElement('img');
     const searchButton = document.getElementById('form-search_button');
     const searchInput = document.getElementById('form-search_input');
+    const submitButton = document.getElementById('submit-form');
 
     const divOrderBy = addImagesFilters();
 
@@ -244,6 +245,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function mountModalUser(user = {}) {
         const modalBody = document.querySelector('.modal-body');
+        submitButton.setAttribute('data-user-id', user.id);
+
         modalBody.innerHTML = '';
 
         modalBody.innerHTML = `
@@ -266,8 +269,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="mb-3">
                     <label for="level" class="form-label">Nível</label>
                     <select class="form-select" id="level" autocomplete="off">
-                        <option value="operator" ${user.level ?? '' === 'operator' ? 'selected' : ''}>Operador</option>
-                        <option value="admin" ${user.level ?? '' === 'admin' ? 'selected' : ''}>Administrador</option>
+                        <option value="operator" ${user.level === 'operator' ? 'selected' : ''}>Operador</option>
+                        <option value="admin" ${user.level === 'admin' ? 'selected' : ''}>Administrador</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -290,7 +293,6 @@ document.addEventListener('DOMContentLoaded', function () {
         mountModalUser(user)
         modalUser.show();
         defineMaskPhoneNumber();
-        prepareEventClickSubmitFormChanges(userId);
     }
 
     function defineMaskPhoneNumber() {
@@ -303,31 +305,24 @@ document.addEventListener('DOMContentLoaded', function () {
         );
     }
 
-
-    async function prepareEventClickSubmitFormChanges(userId) {
-        const submitButton = document.getElementById('submit-form');
-        const newSubmitHandler = async (event) => {
-            event.preventDefault();
-            const user = getDataUserChanged();
-            await updateUserById(user, userId);
-        };
-
-        // Remove os ouvintes de evento anteriores
-        submitButton.replaceWith(submitButton.cloneNode(true));
-        document.getElementById('submit-form').addEventListener('click', newSubmitHandler);
-    }
-
+    submitButton.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const userId = submitButton.getAttribute('data-user-id');
+        try {
+            submitButton.disabled = true;
+            await updateUserById(getDataUserChanged(), userId)
+        } finally {
+            setTimeout(() => {
+                submitButton.disabled = false;
+            }, 700);
+        }
+    });
     function getDataUserChanged() {
-        const name = document.querySelector("input#name").value;
-        const email = document.querySelector("input#email").value;
-        const level = document.querySelector("select#level").value;
-        const phone_number = document.querySelector("input#phone_number").value;
-
         return {
-            name: name,
-            email: email,
-            phone_number: phone_number,
-            level: level
+            name: document.querySelector("input#name").value,
+            email: document.querySelector("input#email").value,
+            phone_number: document.querySelector("input#phone_number").value,
+            level: document.querySelector("select#level").value
         };
     }
 

@@ -1,4 +1,3 @@
-//TODO: após update está com o mesmo erro do reports
 document.addEventListener('DOMContentLoaded', function () {
     let paginateOut = {};
     let filters = '';
@@ -8,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const loadingModal = window.loading();
     const modalRequester = new bootstrap.Modal(document.getElementById('modal-requester'));
-    const modalRequesterNew = new bootstrap.Modal(document.getElementById('modal-requester-new'));
     const filterImg = document.createElement('img');
     const newButton = document.getElementById('new-requester');
     const newButtonSubmit = document.getElementById('submit-form-new');
@@ -31,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
             confirmButtonText: "Sim, entendo os riscos!"
         }).then((result) => {
             if (result.isConfirmed) {
-                const requesterId = deleteButton.dataset.requesterId;
+                const requesterId = deleteButton.getAttribute('data-requester-id');
                 destroy(requesterId);
             }
         });
@@ -39,16 +37,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     })
 
-    newButtonSubmit.addEventListener('click', function (event) {
+    newButtonSubmit.addEventListener('click', async function (event) {
         event.preventDefault();
         const requester = getDataRequesterChanged()
-        store(requester)
+        try {
+            newButtonSubmit.disabled = true;
+            await store(requester)
+        } finally {
+            setTimeout(() => {
+                newButtonSubmit.disabled = false;
+            }, 700);
+        }
     })
     newButton.addEventListener('click', async function (event) {
         event.preventDefault();
         const departments = await getAllDepartment();
-        mountModalRequester({}, departments, '.new-requester-modal-body')
-        modalRequesterNew.show();
+        await mountModalRequester({}, departments, 'insert')
+        modalRequester.show();
     });
 
     getAll();
@@ -248,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 title: response.data.message,
                 timer: 2500
             });
-            modalRequesterNew.hide()
+            modalRequester.hide()
             getAll();
 
         } catch (error) {
@@ -260,30 +265,30 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function mountModalRequesterNew() {
-        const modalBody = document.querySelector('.new-requester-modal-body');
-        modalBody.innerHTML = '';
 
-        modalBody.innerHTML = `
-                <div class="mb-3">
-                    <label for="name" class="form-label">Nome</label>
-                    <input type="text" class="form-control bg-body rounded" name="name" id="name"
-                           placeholder="Digite o nome do departamento"
-                           autocomplete="off"
-                    >
-                </div>
-        `;
-    }
-
-    async function mountModalRequester(requester = {}, departments = {}, selectorQuery) {
-        const modalBody = document.querySelector(selectorQuery);
+    async function mountModalRequester(requester = {}, departments = {}, action) {
+        const modalBody = document.querySelector('.modal-body');
         if (Object.keys(requester).length) {
             deleteButton.setAttribute('data-requester-id', requester.id);
-            if (requester.requesters_count > 0) {
+            if (requester.reports_count > 0) {
                 deleteButton.classList.add('disabled')
             } else {
                 deleteButton.classList.remove('disabled')
             }
+        }
+        const insertValues = action === 'insert';
+        const submitFormNew = document.getElementById('submit-form-new');
+        const submitForm = document.getElementById('submit-form');
+        if (insertValues) {
+
+            deleteButton.classList.add('d-none');
+            submitFormNew.classList.remove('d-none');
+            submitForm.classList.add('d-none');
+        } else {
+            submitFormNew.classList.add('d-none');
+            submitForm.classList.remove('d-none');
+            submitForm.setAttribute('data-requester-id', requester.id);
+            deleteButton.classList.remove('d-none');
         }
 
         modalBody.innerHTML = '';
@@ -293,12 +298,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     <label for="name" class="form-label">Nome</label>
                     <input type="text" class="form-control bg-body rounded" name="name" id="name"
                            placeholder="Digite seu nome"
-                           value="${requester.name ?? ''}"
+                           value="${insertValues ? '' : requester.name}"
                            autocomplete="off"
                     >
                     <label for="level" class="form-label mt-4">Departamento</label>
                     <select class="form-select" id="department_id" autocomplete="off">
-
                     </select>
                 </div>
         `;
@@ -327,23 +331,26 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         const departments = await getAllDepartment();
 
-        mountModalRequester(requester, departments, '.modal-body')
+        await mountModalRequester(requester, departments, '')
         modalRequester.show();
-        prepareEventClickSubmitFormChanges(requesterId);
     }
 
-    async function prepareEventClickSubmitFormChanges(requesterId) {
-        const submitButton = document.getElementById('submit-form');
-        const newSubmitHandler = async (event) => {
-            event.preventDefault();
-            const data = getDataRequesterChanged();
+    const submitButton = document.getElementById('submit-form');
+    submitButton.addEventListener('click', async (event) =>{
+        event.preventDefault();
+        const requesterId = submitButton.getAttribute('data-requester-id');
+        const data = getDataRequesterChanged();
+        try {
+            submitButton.disabled = true;
             await updateById(data, requesterId);
-        };
 
-        // Remove os ouvintes de evento anteriores
-        submitButton.replaceWith(submitButton.cloneNode(true));
-        document.getElementById('submit-form').addEventListener('click', newSubmitHandler);
-    }
+        } finally {
+            setTimeout(() => {
+                submitButton.disabled = false;
+            }, 700)
+        }
+    });
+
 
     function getDataRequesterChanged() {
         const name = document.querySelector('input#name').value;

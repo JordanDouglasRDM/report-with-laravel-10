@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const loadingModal = window.loading();
     const modalDepartment = new bootstrap.Modal(document.getElementById('modal-department'));
-    const modalDepartmentNew = new bootstrap.Modal(document.getElementById('modal-department-new'));
     const filterImg = document.createElement('img');
     const newButton = document.getElementById('new-department');
     const newButtonSubmit = document.getElementById('submit-form-new');
@@ -31,22 +30,28 @@ document.addEventListener('DOMContentLoaded', function () {
             confirmButtonText: "Sim, entendo os riscos!"
         }).then((result) => {
             if (result.isConfirmed) {
-                const departmentId = deleteButton.dataset.departmentId;
+                const departmentId = deleteButton.getAttribute('data-department-id');
                 destroy(departmentId);
             }
         });
 
     })
 
-    newButtonSubmit.addEventListener('click', function (event) {
+    newButtonSubmit.addEventListener('click', async function (event) {
         event.preventDefault();
-        const department = getDataDepartmentChanged('new_name')
-        store(department)
+        try {
+            newButtonSubmit.disabled = true;
+            await store(getDataDepartmentChanged())
+        } finally {
+            setTimeout(() => {
+                newButtonSubmit.disabled = false;
+            }, 700);
+        }
     })
     newButton.addEventListener('click', function (event) {
         event.preventDefault();
-        modalDepartmentNew.show();
-        mountModalDepartmentNew();
+        modalDepartment.show();
+        mountModalDepartment({}, 'insert');
     })
 
     getAll();
@@ -59,7 +64,6 @@ document.addEventListener('DOMContentLoaded', function () {
             loadingModal.show();
 
             const response = await axios.delete('/department/' + id);
-            const departments = response.data.data;
             toast.fire({
                 icon: "success",
                 title: response.data.message,
@@ -240,13 +244,12 @@ document.addEventListener('DOMContentLoaded', function () {
             loadingModal.show();
 
             const response = await axios.post('/department', request);
-            const departments = response.data.data;
             toast.fire({
                 icon: "success",
                 title: response.data.message,
                 timer: 2500
             });
-            modalDepartmentNew.hide()
+            modalDepartment.hide()
             getAll();
 
         } catch (error) {
@@ -258,30 +261,32 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function mountModalDepartmentNew() {
-        const modalBody = document.querySelector('.new-department-modal-body');
-        modalBody.innerHTML = '';
-
-        modalBody.innerHTML = `
-                <div class="mb-3">
-                    <label for="name" class="form-label">Nome</label>
-                    <input type="text" class="form-control bg-body rounded" name="name" id="new_name"
-                           placeholder="Digite o nome do departamento"
-                           autocomplete="off"
-                    >
-                </div>
-        `;
-    }
-
-    function mountModalDepartment(data = {}) {
+    function mountModalDepartment(data = {}, action) {
         const modalBody = document.querySelector('.modal-body');
         deleteButton.setAttribute('data-department-id', data.id);
 
-        if (data.requesters_count > 0) {
-            deleteButton.classList.add('disabled')
+
+        const insertValues = action === 'insert';
+        const submitFormNew = document.getElementById('submit-form-new');
+        const submitForm = document.getElementById('submit-form');
+        if (insertValues) {
+
+            deleteButton.classList.add('d-none');
+            submitFormNew.classList.remove('d-none');
+            submitForm.classList.add('d-none');
         } else {
-            deleteButton.classList.remove('disabled')
+            submitFormNew.classList.add('d-none');
+            submitForm.classList.remove('d-none');
+            submitForm.setAttribute('data-department-id', data.id);
+            deleteButton.classList.remove('d-none');
+
+            if (data.requesters_count > 0) {
+                deleteButton.classList.add('disabled')
+            } else {
+                deleteButton.classList.remove('disabled')
+            }
         }
+
         modalBody.innerHTML = '';
 
         modalBody.innerHTML = `
@@ -289,7 +294,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <label for="name" class="form-label">Nome</label>
                     <input type="text" class="form-control bg-body rounded" name="name" id="name"
                            placeholder="Digite seu nome"
-                           value="${data.name}"
+                           value="${insertValues ? '' : data.name}"
                            autocomplete="off"
                     >
                 </div>
@@ -301,27 +306,28 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!department) {
             return;
         }
-        mountModalDepartment(department)
+        mountModalDepartment(department, '')
         modalDepartment.show();
-        prepareEventClickSubmitFormChanges(departmentId);
     }
 
-    async function prepareEventClickSubmitFormChanges(departmentId) {
-        const submitButton = document.getElementById('submit-form');
-        const newSubmitHandler = async (event) => {
-            event.preventDefault();
-            const data = getDataDepartmentChanged('name');
-            await updateById(data, departmentId);
-        };
+    const submitButton = document.getElementById('submit-form');
+    submitButton.addEventListener('click', async (event) =>{
+        event.preventDefault();
+        const departmentId = submitButton.getAttribute('data-department-id');
+        try {
+            submitButton.disabled = true;
+            await updateById(getDataDepartmentChanged(), departmentId);
 
-        // Remove os ouvintes de evento anteriores
-        submitButton.replaceWith(submitButton.cloneNode(true));
-        document.getElementById('submit-form').addEventListener('click', newSubmitHandler);
-    }
+        } finally {
+            setTimeout(() => {
+                submitButton.disabled = false;
+            }, 700)
+        }
+    });
 
-    function getDataDepartmentChanged(nameId) {
+    function getDataDepartmentChanged() {
         return {
-            name: document.querySelector('input#' + nameId).value,
+            name: document.querySelector('input#name').value,
         };
     }
 
