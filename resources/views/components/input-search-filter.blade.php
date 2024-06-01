@@ -1,7 +1,7 @@
 @props(['switch'])
 
-<div class="" style="width: 35%">
-    <div class="input-group">
+<div class="intro-search-group" style="width: 35%">
+    <div class="intro-search input-group">
         <input type="text" class="form-control bg-light-subtle" name="filter-search"
                id="form-search_input"
                placeholder="Digite um dado para pesquisar">

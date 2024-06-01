@@ -1,3 +1,4 @@
+//TODO: após update está com o mesmo erro do reports
 document.addEventListener('DOMContentLoaded', function () {
     let paginateOut = {};
     let filters = '';

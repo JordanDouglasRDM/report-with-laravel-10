@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@section('scripts')
+    <script defer src="{{ asset('/js/pages/edit-profile.js') }}"></script>
+@endsection
 @section('conteudo')
     <x-slot name="header">
         <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 dark:tw-text-gray-200 tw-leading-tight">
@@ -14,6 +17,11 @@
                 </div>
             </div>
 
+            <div class="tw-p-4 sm:tw-p-8 tw-bg-white dark:tw-bg-gray-800 tw-shadow sm:tw-rounded-lg">
+                <div class="tw-max-w-xl">
+                    @include('profile.partials.tutorials')
+                </div>
+            </div>
             <div class="tw-p-4 sm:tw-p-8 tw-bg-white dark:tw-bg-gray-800 tw-shadow sm:tw-rounded-lg">
                 <div class="tw-max-w-xl">
                     @include('profile.partials.update-password-form')

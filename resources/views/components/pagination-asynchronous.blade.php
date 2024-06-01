@@ -1,5 +1,5 @@
-<div class="container d-flex mt-5 justify-content-between">
-    <div class="me-4">
+<div class="container d-flex mt-5 justify-content-between intro-paginate-group">
+    <div class="me-4 intro-paginate-results">
         <span>Exibindo</span>
         <span id="pg-from"></span>
         <span>para</span>
@@ -8,7 +8,7 @@
         <span id="pg-total"></span>
         <span>registros.</span>
     </div>
-    <div class="d-flex justify-items-center justify-content-between">
+    <div class="d-flex justify-items-center justify-content-between intro-paginate-buttons">
         <div class="d-flex justify-content-between flex-fill">
             <ul class="pagination">
                 <li class="page-item">

@@ -4,11 +4,9 @@
     <script type="module" src="{{ asset('js/main/script.js') }}"></script>
     <script src="{{asset('js/main/helpers.js')}}"></script>
     <script src="{{ asset('js/pages/reports.js') }}"></script>
-
 @endsection
 
 @section('conteudo')
-
     <div class="container-fluid mt-lg-5" style="width: 90%">
         <div class="mb-3 d-flex justify-content-around">
             <button class="btn btn-outline-success" id="new-report">Adicionar Novo</button>
@@ -26,7 +24,7 @@
                 <thead>
                 <tr>
                     <th id="id" scope="col" style="width: 75px" class="bg-info-subtle">
-                        <div class="content order-by">
+                        <div class="content order-by intro-icon">
                             ID
                         </div>
                     </th>
@@ -89,3 +87,6 @@
     </div>
 @endsection
 
+@section('script-before-body')
+    <script src="{{asset('js/intro/intro-reports.js')}}"></script>
+@endsection

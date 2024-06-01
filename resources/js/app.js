@@ -13,3 +13,43 @@ import IMask from "imask";
 window.Alpine = Alpine;
 
 Alpine.start();
+
+
+
+//handle theme
+alterTheme();
+function alterTheme() {
+    const switchTheme = document.querySelector(".selector-theme-toggle-button");
+
+    // Carregar o tema salvo do Local Storage
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        applyTheme(savedTheme);
+        switchTheme.checked = (savedTheme === 'dark');
+    }
+
+    switchTheme.addEventListener('change', (e) => {
+        if (switchTheme.checked) {
+            applyTheme('dark');
+        } else {
+            applyTheme('light');
+        }
+    });
+
+    function applyTheme(theme) {
+        const body = document.querySelector('body');
+        const html = document.documentElement;
+
+        // Ajuste do tema para Bootstrap
+        body.setAttribute('data-bs-theme', theme);
+
+        // Ajuste do tema para Tailwind CSS
+        if (theme === 'dark') {
+            html.classList.add('tw-dark');
+        } else {
+            html.classList.remove('tw-dark');
+        }
+        // Salvar o tema no Local Storage
+        localStorage.setItem('theme', theme);
+    }
+}

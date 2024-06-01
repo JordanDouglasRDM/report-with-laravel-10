@@ -4,7 +4,7 @@
 <div class="btn-group dropdown">
     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
             aria-expanded="false">
-        Registros por página
+        Por página
     </button>
     <div class="dropdown-menu" aria-labelledby="perPageDropdown">
         <li>
