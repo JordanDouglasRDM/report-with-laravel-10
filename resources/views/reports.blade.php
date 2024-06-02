@@ -88,6 +88,6 @@
     </div>
 @endsection
 
-@section('script-before-body')
+@section('script-after-body')
     <script src="{{asset('js/intro/intro-reports.js')}}"></script>
 @endsection

@@ -13,21 +13,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const checkbox = document.querySelector('input[type="checkbox"].all');
     const searchButton = document.getElementById('form-search_button');
     const searchInput = document.getElementById('form-search_input');
-    const qtyPending = document.querySelector('.qty-pending');
 
+    const qtyPending = document.querySelector('.qty-pending');
     qtyPending.addEventListener('click', function (event) {
         event.preventDefault();
-        console.log()
+        searchOutDate = true;
+        filters = 'pending';
+        getAllReport()
     });
-
-    async function updateQtyPending() {
-        const qty =  await getQtyPending();
-        if(qty > 999) {
-            qtyPending.textContent = '999+';
-        } else {
-            qtyPending.textContent = qty;
-        }
-    }
 
 
     document.querySelector('.dropdown-toggle').classList.add('disabled');
@@ -174,17 +167,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    async function getQtyPending() {
-        try {
-            const response = await axios.get('/report/gty/pending/get');
-            return response.data.data.qty_pending;
-
-        } catch (error) {
-            console.error('houve um erro ao recuperar a quantidade de relatórios pendentes', error)
-            return 0;
-        }
-    }
-
     async function selectFilteredRequesters(usage = '') {
 
         let requesterInput = document.getElementById('requester_id');
@@ -327,6 +309,7 @@ document.addEventListener('DOMContentLoaded', function () {
             //verifica se eu estou pesquisando e filtrando repots fora da minha data
             if (searchOutDate === true) {
                 filterDate.value = '';
+                checkbox.checked = true;
             }
 
             request = Object.assign({}, request, {

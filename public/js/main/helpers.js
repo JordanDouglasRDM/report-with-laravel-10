@@ -90,3 +90,27 @@ function mountShower(paginate) {
     to.innerText = paginate.to;
     total.innerText = paginate.total;
 }
+
+
+async function getQtyPending() {
+    try {
+        const response = await axios.get('/report/gty/pending/get');
+        return response.data.data.qty_pending;
+
+    } catch (error) {
+        console.error('houve um erro ao recuperar a quantidade de relatórios pendentes', error)
+        return 0;
+    }
+
+}
+async function updateQtyPending() {
+    const qtyPending = document.querySelector('.qty-pending');
+    const qty = await getQtyPending();
+    if (qty > 999) {
+        qtyPending.textContent = '999+';
+    } else {
+        qtyPending.textContent = qty;
+    }
+}
+
+window.onload = updateQtyPending;

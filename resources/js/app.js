@@ -54,18 +54,20 @@ function alterTheme() {
         }
         const formSearchButton = document.getElementById('form-search_button');
         const inputSearchSwitch = document.getElementById('input-search-switch');
-        if (theme === 'light') {
-            formSearchButton.classList.remove('btn-secondary');
-            formSearchButton.classList.add('btn-outline-secondary');
+        if (formSearchButton && inputSearchSwitch) {
+            if (theme === 'light') {
+                formSearchButton.classList.remove('btn-secondary');
+                formSearchButton.classList.add('btn-outline-secondary');
 
-            inputSearchSwitch.classList.remove('btn-secondary');
-            inputSearchSwitch.classList.add('btn-outline-secondary');
-        } else {
-            formSearchButton.classList.remove('btn-outline-secondary');
-            formSearchButton.classList.add('btn-secondary');
+                inputSearchSwitch.classList.remove('btn-secondary');
+                inputSearchSwitch.classList.add('btn-outline-secondary');
+            } else {
+                formSearchButton.classList.remove('btn-outline-secondary');
+                formSearchButton.classList.add('btn-secondary');
 
-            inputSearchSwitch.classList.remove('btn-outline-secondary');
-            inputSearchSwitch.classList.add('btn-secondary');
+                inputSearchSwitch.classList.remove('btn-outline-secondary');
+                inputSearchSwitch.classList.add('btn-secondary');
+            }
         }
 
 

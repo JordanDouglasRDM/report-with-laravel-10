@@ -2,6 +2,7 @@
 @section('scripts')
     <script defer src="{{ asset('/js/pages/edit-profile.js') }}"></script>
 @endsection
+
 @section('conteudo')
     <x-slot name="header">
         <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 dark:tw-text-gray-200 tw-leading-tight">
@@ -35,4 +36,7 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script-after-body')
+    <scrip src="{{ asset('/js/main/helpers.js') }}"></scrip>
 @endsection

@@ -45,6 +45,6 @@
 
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.min.js"></script>
-@yield('script-before-body')
+@yield('script-after-body')
 </body>
 </html>
