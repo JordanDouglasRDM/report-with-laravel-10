@@ -32,12 +32,16 @@
             </label>
         </div>
 
-        <div class="tw-flex tw-items-center tw-justify-end tw-mt-4">
+        <div class="tw-flex tw-items-center tw-justify-between tw-mt-4">
             @if (Route::has('password.request'))
                 <a class="tw-underline tw-text-sm tw-text-gray-600 dark:tw-text-gray-400 hover:tw-text-gray-900 dark:hover:tw-text-gray-100 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-offset-2 focus:tw-ring-indigo-500 dark:focus:tw-ring-offset-gray-800" href="{{ route('password.request') }}">
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
+            <a class="tw-underline tw-text-sm tw-text-gray-600 dark:tw-text-gray-400 hover:tw-text-gray-900 dark:hover:tw-text-gray-100 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-offset-2 focus:tw-ring-indigo-500 dark:focus:tw-ring-offset-gray-800"
+            href="{{ route('register') }}">
+                Registre-se
+            </a>
 
             <x-primary-button class="ms-3">
                 {{ __('Log in') }}

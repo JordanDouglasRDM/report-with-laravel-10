@@ -1,19 +1,22 @@
 <nav x-data="{ open: false }"
      class="tw-bg-white dark:tw-bg-gray-800 tw-border-b tw-border-gray-100 dark:tw-border-gray-700">
     <!-- Primary Navigation Menu -->
-    <div class="tw-max-w-7xl tw-mx-auto tw-px-4 sm:tw-px-6 lg:tw-px-8">
+    <div class="tw-mx-auto tw-px-4 sm:tw-px-6 lg:tw-px-8">
+
         <div class="tw-flex tw-justify-between tw-h-16">
+            <div class="shrink-0 tw-flex tw-items-center me-5">
+                <a href="{{ route('report.index') }}">
+                    {{--                        <img width="96" height="96" src="https://img.icons8.com/nolan/96/graph-report.png" alt="graph-report"/>--}}
+                    <img width="60" height="60" src="{{ asset('/assets/img/logo-cinza.png') }}"
+                         alt="graph-report"
+                         class="rounded-3"
+                    />
+                    {{--                        <x-application-logo--}}
+                    {{--                            class="tw-block tw-h-9 tw-w-auto tw-fill-current tw-text-gray-800 dark:tw-text-gray-200"/>--}}
+                </a>
+            </div>
             <div class="tw-flex">
                 <!-- Logo -->
-                <div class="shrink-0 tw-flex tw-items-center">
-                    <a href="{{ route('report.index') }}">
-                        {{--                        <img width="96" height="96" src="https://img.icons8.com/nolan/96/graph-report.png" alt="graph-report"/>--}}
-                        <img width="50" height="50" src="https://img.icons8.com/nolan/64/graph-report.png"
-                             alt="graph-report"/>
-                        {{--                        <x-application-logo--}}
-                        {{--                            class="tw-block tw-h-9 tw-w-auto tw-fill-current tw-text-gray-800 dark:tw-text-gray-200"/>--}}
-                    </a>
-                </div>
 
                 <!-- Navigation Links -->
                 <div class="tw-hidden tw-space-x-8 sm:tw--my-px sm:ms-10 sm:tw-flex">
