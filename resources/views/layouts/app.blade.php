@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Reports - Gerenciador de Relatórios">
+    <meta property="og:description" content="Sistema dedicado a gerenciar relatórios de atendimentos e atividades executadas.">
+    <meta property="og:image" content="{{ asset('/assets/img/logo-cinza.png') }}">
+    <meta property="og:url" content="https://reports-oczn3.ondigitalocean.app/">
+    <meta property="og:type" content="website">
+
     <title>Reports</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/introjs.css">
