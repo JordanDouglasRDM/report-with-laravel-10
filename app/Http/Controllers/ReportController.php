@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ReportController extends Controller
 {
@@ -104,6 +105,7 @@ class ReportController extends Controller
             ], 200);
 
         } catch (\Exception $e) {
+            Log::error("User: " . auth()->guard()->user()->id .  $e->getMessage());
             return response()->json([
                 'status' => 500,
                 'message' => 'Erro interno do servidor',
@@ -139,6 +141,7 @@ class ReportController extends Controller
             ], 200);
 
         } catch (\Exception $e) {
+            Log::error("User: " . auth()->guard()->user()->id .  $e->getMessage());
             return response()->json([
                 'status' => 500,
                 'message' => 'Erro interno do servidor',
@@ -208,6 +211,7 @@ class ReportController extends Controller
                 'message' => 'Relatório atualizado com sucesso!',
             ]);
         } catch (\Exception $e) {
+            Log::error("User: " . auth()->guard()->user()->id .  $e->getMessage());
             return response()->json([
                 'status' => 500,
                 'message' => 'Erro interno do servidor',
@@ -237,6 +241,7 @@ class ReportController extends Controller
                 'message' => 'Relatório excluido com sucesso!',
             ]);
         } catch (\Exception $e) {
+            Log::error("User: " . auth()->guard()->user()->id .  $e->getMessage());
             return response()->json([
                 'status' => 500,
                 'message' => 'Erro interno do servidor',
