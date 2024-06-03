@@ -297,12 +297,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="mb-3">
                     <label for="name" class="form-label">Nome</label>
                     <input type="text" class="form-control bg-body rounded" name="name" id="name"
-                           placeholder="Digite seu nome"
+                           placeholder="Digite o nome do funcionário"
                            value="${insertValues ? '' : requester.name}"
                            autocomplete="off"
                     >
                     <label for="level" class="form-label mt-4">Departamento</label>
                     <select class="form-select" id="department_id" autocomplete="off">
+                    <option value="">Escolha</option>
                     </select>
                 </div>
         `;

@@ -11,26 +11,32 @@
             <span>registros.</span>
         </div>
     </div>
-    <div class="d-flex m-2 pagination-responsive__qty-reports">
-        <button class="btn btn-sm btn-outline-light position-relative abstract-qty-reports" style="margin-left: -85px" id="pending">
-            Pendente
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger qty-pending">
+    @if(request()->routeIs('report.index'))
+        <div class="d-flex m-2 pagination-responsive__qty-reports">
+            <button class="btn btn-sm btn-outline-light position-relative abstract-qty-reports"
+                    style="margin-left: -85px" id="pending">
+                Pendente
+                <span
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger qty-pending">
                 -
             </span>
-        </button>
-        <button class="btn btn-sm btn-outline-light ms-4 position-relative abstract-qty-reports" id="in_progress">
-            Em Andamento
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-black qty-in-progress">
+            </button>
+            <button class="btn btn-sm btn-outline-light ms-4 position-relative abstract-qty-reports" id="in_progress">
+                Em Andamento
+                <span
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-black qty-in-progress">
                 -
             </span>
-        </button>
-        <button class="btn btn-sm btn-outline-light ms-4 position-relative abstract-qty-reports" id="completed">
-            Finalizado
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success qty-completed">
+            </button>
+            <button class="btn btn-sm btn-outline-light ms-4 position-relative abstract-qty-reports" id="completed">
+                Finalizado
+                <span
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success qty-completed">
                 -
             </span>
-        </button>
-    </div>
+            </button>
+        </div>
+    @endif
     <div class="d-flex justify-items-center justify-content-between intro-paginate-buttons">
         <div class="d-flex justify-content-between flex-fill">
             <ul class="pagination">

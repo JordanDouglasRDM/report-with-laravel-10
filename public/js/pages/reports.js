@@ -561,7 +561,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="mb-3">
             <label for="requester_name" class="form-label">Funcionário</label>
             <input type="text" class="form-control bg-body rounded" name="requester_name" id="requester_id"
-                   placeholder="Digite seu nome"
+                   placeholder="Escolha um funcionário"
                    data-requester-id="${insertValues ? '' : report.requester.id ?? ''}"
                    value="${insertValues ? '' : report.requester.name ?? ''}"
                    autocomplete="off"
@@ -571,8 +571,9 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
         <div class="mb-3 col-6">
             <label for="abstract" class="form-label">Resumo</label>
-            <input type="tel" class="form-control bg-body rounded" id="abstract"
-                   placeholder="Digite seu número de telefone"
+            <input type="text" class="form-control bg-body rounded" id="abstract"
+                   placeholder="Faça um breve resumo"
+                   minlength="5"
                    value="${insertValues ? '' : report.abstract ?? ''}"
                    autocomplete="off"
             >
@@ -588,7 +589,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="mb-3">
             <label for="description" class="form-label">Descrição</label>
             <textarea type="text" class="form-control bg-body rounded" id="description"
-                   placeholder="Digite seu número de telefone"
+                   placeholder="Descreva a atividade"
                    autocomplete="off"
                    style="height: 140px">${insertValues ? '' : report.description ?? ''}</textarea>
         </div>

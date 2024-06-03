@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="mb-3">
                     <label for="name" class="form-label">Nome</label>
                     <input type="text" class="form-control bg-body rounded" name="name" id="name"
-                           placeholder="Digite seu nome"
+                           placeholder="Digite o nome de um departamento"
                            value="${insertValues ? '' : data.name}"
                            autocomplete="off"
                     >
