@@ -16,6 +16,7 @@ class Report extends Model
         'requester_id',
         'abstract',
         'description',
+        'scheduling_date'
     ];
 
     public function user(): BelongsTo

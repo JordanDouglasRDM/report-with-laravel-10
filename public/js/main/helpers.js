@@ -92,10 +92,10 @@ function mountShower(paginate) {
 }
 
 
-async function getQtyPending() {
+async function getQtyReports() {
     try {
-        const response = await axios.get('/report/gty/pending/get');
-        return response.data.data.qty_pending;
+        const response = await axios.get('/report/gty/report/get');
+        return response.data.data;
 
     } catch (error) {
         console.error('houve um erro ao recuperar a quantidade de relatórios pendentes', error)
@@ -103,14 +103,25 @@ async function getQtyPending() {
     }
 
 }
-async function updateQtyPending() {
+async function updateQtyReports() {
     const qtyPending = document.querySelector('.qty-pending');
-    const qty = await getQtyPending();
-    if (qty > 999) {
+    const qtyInProgress = document.querySelector('.qty-in-progress');
+    const qtyCompleted = document.querySelector('.qty-completed');
+    const qty = await getQtyReports();
+
+    if (qty.pending > 999) {
         qtyPending.textContent = '999+';
     } else {
-        qtyPending.textContent = qty;
+        qtyPending.textContent = qty.pending;
+    }
+    if (qty.in_progress > 999) {
+        qtyInProgress.textContent = '999+';
+    } else {
+        qtyInProgress.textContent = qty.in_progress;
+    }
+    if (qty.completed > 999) {
+        qtyCompleted.textContent = '999+';
+    } else {
+        qtyCompleted.textContent = qty.completed;
     }
 }
-
-window.onload = updateQtyPending;

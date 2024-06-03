@@ -2,6 +2,7 @@
 @import "loader.css";
 @import "toggle-switch.css";
 @import "switch-theme.css";
+@import "responsive-report.css";
 
 @tailwind base;
 @tailwind components;

@@ -26,7 +26,7 @@ class GetAllReportRequest extends FormRequest
         return [
             'per_page' => 'nullable|numeric|max:100',
             'filter_search' => 'nullable|string|max:100',
-            'order_by' => 'nullable|in:id,status,priority,user_id,requester_id,abstract,requester_name,description,created_at',
+            'order_by' => 'nullable|in:id,status,priority,user_id,requester_id,abstract,requester_name,description,created_at,scheduling_date',
             'order_direction' => 'nullable|in:asc,desc',
             'filter_date' => 'nullable|date',
             'search_out_date' => 'required|in:true,false'

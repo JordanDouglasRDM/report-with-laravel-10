@@ -14,6 +14,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchButton = document.getElementById('form-search_button');
     const searchInput = document.getElementById('form-search_input');
 
+    document.querySelectorAll('.abstract-qty-reports').forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.preventDefault();
+            searchOutDate = true;
+            filters = el.id;
+            getAllReport();
+        })
+    })
+
     const qtyPending = document.querySelector('.qty-pending');
     qtyPending.addEventListener('click', function (event) {
         event.preventDefault();
@@ -115,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return {
             requester_id: requesterInput.getAttribute('data-requester-id'),
             abstract: document.querySelector('input#abstract').value,
+            scheduling_date: document.querySelector('input#scheduling_date').value,
             description: document.querySelector('textarea#description').value,
             status: document.querySelector('select#status').value,
             priority: document.querySelector('select#priority').value,
@@ -210,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 li.addEventListener('click', function (event) {
                     requesterInput.value = event.target.textContent;
                     requesterInput.setAttribute('data-requester-id', event.target.id);
-                    requesterList.innerHTML = ''; // Limpa as sugestões após selecionar
+                    requesterList.innerHTML = '';
                 });
             });
         });
@@ -295,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function () {
     async function getAllReport(request = {}) {
         try {
             loadingModal.show();
-            updateQtyPending();
+            updateQtyReports();
             //se eu possuo filtro definido, na nova paginação, permanece com o filtro
             if (filters !== '') {
                 request = Object.assign({}, request, {filter_search: filters});
@@ -439,14 +449,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         reports.forEach(report => {
             const tr = document.createElement('tr');
-            let createdAt = new Date(report.created_at)
-            createdAt = createdAt.toLocaleDateString('pt-BR');
 
             tr.innerHTML = `
-                <td class="align-middle">${report.id}</td>
+                <td class="align-middle responsive-remove-column">${report.id}</td>
                 <td class="align-middle">${report.requester.name}</td>
-                <td class="align-middle">${report.abstract}</td>
-                <td class="align-content-around text-justify" style="text-align: justify">${report.description}</td>
+                <td class="align-middle responsive-remove-column">${report.abstract}</td>
+                <td class="align-content-around text-justify responsive-remove-column" style="text-align: justify">${report.description}</td>
                 <td class="align-middle"><p class="status-text badge rounded-pill">${report.status}</p></td>
                 <td class="align-middle">
                 <div class="d-flex justify-content-around align-content-center">
@@ -456,7 +464,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 </div>
                 </td>
-                <td class="align-middle">${createdAt}</td>
+                <td class="align-middle responsive-remove-column">${formatDate(report.scheduling_date)}</td>
                 <td class="align-middle"><a class="edit-button btn btn-outline-secondary btn-sm" id="${report.id}">Editar</a></td>
             `;
             tableBody.appendChild(tr);
@@ -518,6 +526,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const modalBody = document.querySelector('.modal-body');
         modalBody.innerHTML = '';
         const insertValues = action === 'inserir';
+        let now = window.nowFromPhp.slice(0,16);
 
         const submitFormNewReport = document.getElementById('submit-form-new-report');
         const submitFormReport = document.getElementById('submit-form-report');
@@ -535,6 +544,19 @@ document.addEventListener('DOMContentLoaded', function () {
             deleteButton.setAttribute('data-report-id', report.id);
         }
 
+        const modalFooterHTML = !insertValues ? `
+        <div class="modal-footer d-block">
+            <div>
+                <span>Criado em: </span>
+                <span>${formatDate(report.created_at)}</span>
+            </div>
+            <div>
+                <span>Última atualização: </span>
+                <span>${formatDate(report.updated_at)}</span>
+            </div>
+        </div>
+        ` : '';
+
         modalBody.innerHTML = `
         <div class="mb-3">
             <label for="requester_name" class="form-label">Funcionário</label>
@@ -547,7 +569,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <ul class="list-group position-absolute d-none" id="requesters_name_list">
             </ul>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 col-6">
             <label for="abstract" class="form-label">Resumo</label>
             <input type="tel" class="form-control bg-body rounded" id="abstract"
                    placeholder="Digite seu número de telefone"
@@ -555,6 +577,14 @@ document.addEventListener('DOMContentLoaded', function () {
                    autocomplete="off"
             >
         </div>
+        <div class="mb-3 col-6">
+            <label for="scheduling_date" class="form-label">Agendamento</label>
+            <input type="datetime-local" class="form-control bg-body rounded" id="scheduling_date" name="scheduling_date"
+                   value="${insertValues ? now : report.scheduling_date.slice(0, 16) ?? ''}"
+                   autocomplete="off"
+            >
+        </div>
+
         <div class="mb-3">
             <label for="description" class="form-label">Descrição</label>
             <textarea type="text" class="form-control bg-body rounded" id="description"
@@ -563,7 +593,7 @@ document.addEventListener('DOMContentLoaded', function () {
                    style="height: 140px">${insertValues ? '' : report.description ?? ''}</textarea>
         </div>
         <div class="mb-3">
-            <label for="status" class="form-label">Nível</label>
+            <label for="status" class="form-label">Status</label>
             <select class="form-select" id="status" autocomplete="off">
                 <option value="pending" ${report.status === 'pending' ? 'selected' : ''}>Pendente</option>
                 <option value="completed" ${report.status === 'completed' ? 'selected' : ''}>Concluído</option>
@@ -579,7 +609,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 <option value="note" ${report.priority === 'note' ? 'selected' : ''}>Anotação</option>
             </select>
         </div>
+        ${modalFooterHTML}
     `;
+    }
+
+    function formatDate(date) {
+        const data = new Date(date)
+        return data.toLocaleString('pt-BR');
     }
 
     async function mountModalReportSelected(reportId) {

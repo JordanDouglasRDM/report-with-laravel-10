@@ -17,6 +17,7 @@ Alpine.start();
 
 //handle theme
 alterTheme();
+
 function alterTheme() {
     const switchTheme = document.querySelector(".selector-theme-toggle-button");
     switchTheme.checked = true;
@@ -69,6 +70,16 @@ function alterTheme() {
                 inputSearchSwitch.classList.add('btn-secondary');
             }
         }
+
+        document.querySelectorAll('.abstract-qty-reports').forEach(el => {
+            if (theme === 'light') {
+                el.classList.remove('btn-outline-light');
+                el.classList.add('btn-outline-secondary');
+            } else {
+                el.classList.add('btn-outline-light');
+                el.classList.remove('btn-outline-secondary');
+            }
+        })
 
 
         // Ajuste do tema para Bootstrap

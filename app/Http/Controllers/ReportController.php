@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -28,18 +29,22 @@ class ReportController extends Controller
         return view('reports');
     }
 
-    public function getQtyPending()
+    public function getQtyReports()
     {
         try {
-            $reports = $this->report
-                ->where('status', 'pending')
-                ->where('created_at', '<=', Carbon::now())
-                ->where('user_id', auth()->user()->id)
-                ->count();
+            $userId = auth()->user()->id;
 
+            $statuses = $this->report
+                ->select('status', DB::raw('count(*) as total'))
+                ->where('reports.user_id', $userId)
+                ->groupBy('status')
+                ->get()
+                ->pluck('total', 'status')
+                ->toArray();
+            ;
             return response()->json([
                 'status' => 200,
-                'data' => ['qty_pending' => $reports],
+                'data' => $statuses,
                 'message' => 'Registros encontados.'
             ], 200);
 
@@ -75,7 +80,7 @@ class ReportController extends Controller
             $reports->with(['requester:id,name']);
 
             if ($data['search_out_date'] == 'false') {
-                $reports->where('reports.created_at', 'like', $data['filter_date'] . '%');
+                $reports->where('reports.scheduling_date', 'like', $data['filter_date'] . '%');
             }
 
             if (isset($data['order_by']) && $data['order_by'] == 'requester_name') {

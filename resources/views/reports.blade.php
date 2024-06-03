@@ -3,13 +3,17 @@
 @section('scripts')
     <script type="module" src="{{ asset('js/main/script.js') }}"></script>
     <script src="{{asset('js/main/helpers.js')}}"></script>
+    <script>
+        window.nowFromPhp = @json(\Carbon\Carbon::now(new DateTimeZone('America/Sao_Paulo'))->format('Y-m-d H:i'));
+    </script>
     <script src="{{ asset('js/pages/reports.js') }}"></script>
+
 @endsection
 
 @section('conteudo')
-    <div class="container-fluid mt-lg-5" style="width: 90%">
+    <div class="container-fluid mt-lg-5 responsive-container" style="width: 90%">
 
-            <div class="mb-3 d-flex justify-content-between">
+            <div class="mb-3 d-flex justify-content-between responsive-header">
                 <x-add-button id="new-report"/>
 
                 <x-input-search-filter :switch="true"/>
@@ -24,7 +28,7 @@
             <table id="reports-table" class="table table-bordered table-hover">
                 <thead>
                 <tr>
-                    <th id="id" scope="col" style="width: 75px" class="bg-info-subtle">
+                    <th id="id" scope="col" style="width: 75px" class="bg-info-subtle responsive-remove-column">
                         <div class="content order-by intro-icon">
                             ID
                         </div>
@@ -34,12 +38,12 @@
                             Funcionário
                         </div>
                     </th>
-                    <th id="abstract" scope="col" style="width: 350px" class="bg-info-subtle">
+                    <th id="abstract" scope="col" style="width: 250px" class="bg-info-subtle responsive-remove-column">
                         <div class="content order-by">
                             Resumo
                         </div>
                     </th>
-                    <th id="description" scope="col" class="bg-info-subtle">Descrição</th>
+                    <th id="description" scope="col" class="bg-info-subtle responsive-remove-column">Descrição</th>
                     <th id="status" scope="col" class="col-sm-1 bg-info-subtle">
                         <div class="content order-by">
                             Status
@@ -50,9 +54,9 @@
                             Prioridade
                         </div>
                     </th>
-                    <th id="created_at" scope="col" class="bg-info-subtle">
+                    <th id="scheduling_date" scope="col" class="bg-info-subtle responsive-remove-column" style="width: 150px">
                         <div class="content order-by">
-                            Data
+                            Agendamento
                         </div>
                     </th>
                     <th scope="col" class="bg-info-subtle">Ações</th>
@@ -76,7 +80,7 @@
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Relatório</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body"></div>
+                <div class="modal-body row"></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-danger" id="delete-button-report">Excluir</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

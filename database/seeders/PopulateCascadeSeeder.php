@@ -114,7 +114,7 @@ class PopulateCascadeSeeder extends Seeder
                 'requester_id' => $requester->id,
                 'abstract' => fake()->sentence(), //default 6 words
                 'description' => fake()->text(450),
-                'created_at' => fake()->dateTimeBetween($requester->created_at, 'now'),
+                'scheduling_date' => fake()->dateTimeBetween($requester->created_at, '+2 week'),
             ]);
         }
     }

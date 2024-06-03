@@ -29,6 +29,7 @@ class UpdateReportRequest extends FormRequest
             'requester_id' => 'required|exists:requesters,id',
             'abstract' => 'required|string|max:400|min:5',
             'description' => 'nullable|string',
+            'scheduling_date' => 'required|date',
         ];
     }
     protected function failedValidation(Validator $validator)
