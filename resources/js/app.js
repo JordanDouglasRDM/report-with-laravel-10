@@ -19,6 +19,7 @@ Alpine.start();
 alterTheme();
 
 function alterTheme() {
+
     const switchTheme = document.querySelector(".selector-theme-toggle-button");
     switchTheme.checked = true;
 
