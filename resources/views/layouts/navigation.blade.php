@@ -20,7 +20,8 @@
 
                 <!-- Navigation Links -->
                 <div class="tw-hidden tw-space-x-8 sm:tw--my-px sm:ms-10 sm:tw-flex">
-                    <x-nav-link :href="route('report.index')" :active="request()->routeIs('report.index')" class="position-relative">
+                    <x-nav-link :href="route('report.index')" :active="request()->routeIs('report.index')"
+                                class="position-relative">
                         Relatórios
                     </x-nav-link>
 
@@ -96,8 +97,19 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'tw-block': open, 'tw-hidden': ! open}" class="tw-hidden sm:tw-hidden">
         <div class="tw-pt-2 tw-pb-3 tw-space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+            <x-responsive-nav-link :href="route('report.index')" :active="request()->routeIs('report.index')">
+                Relatórios
+            </x-responsive-nav-link>
+            @can('show',\App\Models\User::class)
+                <x-responsive-nav-link :href="route('user.index')" :active="request()->routeIs('user.index')">
+                    Usuários
+                </x-responsive-nav-link>
+            @endcan
+            <x-responsive-nav-link :href="route('department.index')" :active="request()->routeIs('department.index')">
+                Departamentos
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('requester.index')" :active="request()->routeIs('requester.index')">
+                Funcionários
             </x-responsive-nav-link>
         </div>
 

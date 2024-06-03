@@ -17,7 +17,7 @@
                 <x-add-button id="new-report"/>
 
                 <x-input-search-filter :switch="true"/>
-                <div class="form-group">
+                <div class="form-group item-responsive-header">
                     <input type="date" class="form-control" id="filter_date">
                 </div>
 
