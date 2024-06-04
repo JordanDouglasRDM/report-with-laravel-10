@@ -29,7 +29,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        \Log::info("User: " . auth()->guard()->user()->id .  ' logged in');
+        \Log::info("User: " . auth()->guard()->user()->id .  ' logged in from ip device: ' . $request->ip());
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 

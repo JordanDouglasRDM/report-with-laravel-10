@@ -36,7 +36,6 @@ Route::middleware('auth')->group(function () {
 Route::middleware('level:admin')->group(function () {
     Route::get('/user/get', [UserController::class, 'getAll']);
     Route::resource('/user', UserController::class);
-
 });
 
 Route::middleware('level:admin,operator')->group(function () {

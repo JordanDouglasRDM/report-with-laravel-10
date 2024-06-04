@@ -22,7 +22,7 @@ class UserLevelAccessMiddleware
 
             if ($secondMiddleware !== $userAuth) {
                 if (auth()->check()) {
-                    return redirect()->route('dashboard');
+                    return redirect()->route('report.index');
                 } else {
                     return redirect()->route('login');
                 }

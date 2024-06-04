@@ -15,41 +15,15 @@
     >{{ __('Delete Account') }}</x-danger-button>
 
     <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
-        <form method="post" action="{{ route('profile.destroy') }}" class="tw-p-6">
-            @csrf
-            @method('delete')
-
+        <div class="tw-p-6">
             <h2 class="tw-text-lg tw-font-medium tw-text-gray-900 dark:tw-text-gray-100">
-                {{ __('Are you sure you want to delete your account?') }}
+                Você deseja realmente excluir sua conta?
             </h2>
 
             <p class="tw-mt-1 tw-text-sm tw-text-gray-600 dark:tw-text-gray-400">
-                {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
+                Para isso, por favor, entre em contato com nosso administrador no email <strong>admin@itechsoftmaster.com</strong> e solicite a exclusão completa dos seus dados.
+                O prazo para realizar isto é de 7 dias até 15 dias úteis.
             </p>
-
-            <div class="tw-mt-6">
-                <x-input-label for="password" value="{{ __('Password') }}" class="tw-sr-only" />
-
-                <x-text-input
-                    id="password"
-                    name="password"
-                    type="password"
-                    class="tw-mt-1 tw-block tw-w-3/4"
-                    placeholder="{{ __('Password') }}"
-                />
-
-                <x-input-error :messages="$errors->userDeletion->get('password')" class="tw-mt-2" />
-            </div>
-
-            <div class="tw-mt-6 tw-flex tw-justify-end">
-                <x-secondary-button x-on:click="$dispatch('close')">
-                    {{ __('Cancel') }}
-                </x-secondary-button>
-
-                <x-danger-button class="ms-3">
-                    {{ __('Delete Account') }}
-                </x-danger-button>
-            </div>
-        </form>
+        </div>
     </x-modal>
 </section>
