@@ -217,15 +217,15 @@ document.addEventListener('DOMContentLoaded', function () {
             createdAt = createdAt.toLocaleDateString('pt-BR');
 
             tr.innerHTML = `
-                <td>${user.id}</td>
-                <td>${user.name}</td>
-                <td>${user.phone_number}</td>
-                <td>${user.level}</td>
-                <td>${user.email}</td>
-                <td>${user.departments_count}/${user.requesters_count}</td>
-                <td>${user.reports_count}</td>
-                <td>${createdAt}</td>
-                <td><a class="edit-button btn btn-outline-secondary btn-sm" id="${user.id}">Editar</a></td>
+                <td class="responsive-remove-column">${user.id}</td>
+                <td class="">${user.name}</td>
+                <td class="responsive-remove-column">${user.phone_number}</td>
+                <td class="responsive-remove-column">${user.level}</td>
+                <td class="responsive-remove-column">${user.email}</td>
+                <td class="responsive-remove-column">${user.departments_count}/${user.requesters_count}</td>
+                <td class="">${user.reports_count}</td>
+                <td class="responsive-remove-column">${createdAt}</td>
+                <td class=""><a class="edit-button btn btn-outline-secondary btn-sm" id="${user.id}">Editar</a></td>
             `;
             tableBody.appendChild(tr);
         });

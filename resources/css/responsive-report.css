@@ -1,3 +1,9 @@
+.responsive-header {
+    justify-content: space-between;
+}
+.responsive-header-around {
+    justify-content: space-between;
+}
 @media only screen and (max-width: 480px) {
     body {
         width: 100%;
@@ -7,8 +13,8 @@
         overflow-x: hidden !Important; /* Hide horizontal scrollbar */
         font-size: 12px !important;
     }
-
-    .responsive-header {
+    .responsive-header-around {
+        justify-content: space-around;
         width: 100%;
         display: flex;
         flex-wrap: wrap;
@@ -16,7 +22,15 @@
         justify-items: center;
         align-items: center;
     }
-
+    .responsive-header {
+        justify-content: center;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-items: center;
+        align-items: center;
+    }
     .intro-paginate-group {
         width: 100%;
         display: flex;
@@ -76,5 +90,10 @@
 
     #requester_name {
         width: 140px !important;
+    }
+
+/*    específico users*/
+    th.bg-info-subtle {
+        text-align: center;
     }
 }

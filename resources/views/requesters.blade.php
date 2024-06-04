@@ -9,7 +9,7 @@
 
 @section('conteudo')
     <div class="container mt-lg-5">
-        <div class="mb-3 d-flex justify-content-between">
+        <div class="mb-3 d-flex responsive-header-around">
             <x-add-button id="new-requester" />
             <x-input-search-filter :switch="false"/>
             <x-input-clear-filters route="user.index"/>
@@ -18,7 +18,7 @@
             <table id="requesters-table" class="table table-bordered table-hover">
                 <thead>
                 <tr>
-                    <th class="bg-info-subtle" id="id" scope="col">
+                    <th class="bg-info-subtle responsive-remove-column" id="id" scope="col">
                         <div class="content order-by">
                             ID
                         </div>
@@ -33,12 +33,12 @@
                             Departamento
                         </div>
                     </th>
-                    <th class="bg-info-subtle" id="reports_count" scope="col">
+                    <th class="bg-info-subtle responsive-remove-column" id="reports_count" scope="col">
                         <div class="content order-by">
                             QTD Relatórios
                         </div>
                     </th>
-                    <th class="bg-info-subtle" id="created_at" scope="col">
+                    <th class="bg-info-subtle responsive-remove-column" id="created_at" scope="col">
                         <div class="content order-by">
                             Data Criação
                         </div>

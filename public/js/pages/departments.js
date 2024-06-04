@@ -217,11 +217,11 @@ document.addEventListener('DOMContentLoaded', function () {
             createdAt = createdAt.toLocaleDateString('pt-BR');
 
             tr.innerHTML = `
-                <td>${data.id}</td>
-                <td>${data.name}</td>
-                <td>${data.requesters_count}</td>
-                <td>${createdAt}</td>
-                <td><a class="edit-button btn btn-outline-secondary btn-sm" id="${data.id}">Editar</a></td>
+                <td class="responsive-remove-column">${data.id}</td>
+                <td class="">${data.name}</td>
+                <td class="">${data.requesters_count}</td>
+                <td class="responsive-remove-column">${createdAt}</td>
+                <td class=""><a class="edit-button btn btn-outline-secondary btn-sm" id="${data.id}">Editar</a></td>
             `;
             tableBody.appendChild(tr);
         });

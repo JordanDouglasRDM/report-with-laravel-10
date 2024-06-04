@@ -9,7 +9,7 @@
 
 @section('conteudo')
     <div class="container-fluid mt-lg-5" style="width: 90%">
-        <div class="mb-3 d-flex justify-content-between">
+        <div class="mb-3 d-flex responsive-header">
             <x-input-search-filter :switch="false"/>
             <x-input-clear-filters route="user.index"/>
         </div>
@@ -17,7 +17,7 @@
             <table id="users-table" class="table table-bordered table-hover">
                 <thead>
                 <tr>
-                    <th class="bg-info-subtle" id="id" scope="col">
+                    <th class="bg-info-subtle responsive-remove-column" id="id" scope="col">
                         <div class="content order-by">
                             ID
                         </div>
@@ -27,22 +27,22 @@
                             Nome
                         </div>
                     </th>
-                    <th class="bg-info-subtle" id="phone_number" scope="col">
+                    <th class="bg-info-subtle responsive-remove-column" id="phone_number" scope="col">
                         <div class="content order-by">
                             Telefone
                         </div>
                     </th>
-                    <th class="bg-info-subtle" id="level" scope="col">
+                    <th class="bg-info-subtle responsive-remove-column" id="level" scope="col">
                         <div class="content order-by">
                             Nível de acesso
                         </div>
                     </th>
-                    <th class="bg-info-subtle" id="email" scope="col">
+                    <th class="bg-info-subtle responsive-remove-column" id="email" scope="col">
                         <div class="content order-by">
                             Email
                         </div>
                     </th>
-                    <th class="bg-info-subtle" id="" scope="col">
+                    <th class="bg-info-subtle responsive-remove-column" id="" scope="col">
                             Departamentos/Funcionários
                     </th>
                     <th class="bg-info-subtle" id="reports_count" scope="col">
@@ -50,7 +50,7 @@
                             QTD Relatórios
                         </div>
                     </th>
-                    <th class="bg-info-subtle" id="created_at" scope="col">
+                    <th class="bg-info-subtle responsive-remove-column" id="created_at" scope="col">
                         <div class="content order-by">
                             Data Criação
                         </div>
