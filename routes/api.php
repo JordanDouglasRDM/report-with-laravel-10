@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::get('/nubank/invasao', function () {
-    $ip = request()->ip();
+    $ip = request()->getClientIp();
     Log::error('Alerta de invasão! IP de Origem: ' . $ip);
 
     return response()->json([
