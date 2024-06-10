@@ -17,3 +17,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::get('/nubank/invasao', function () {
+    $ip = request()->ip();
+    Log::error('Alerta de invasão! IP de Origem: ' . $ip);
+
+    return response()->json([
+        'status' => 200,
+        'data' => ['data' => 'nubank invadida'],
+        'message' => 'Sucesso na requisição.'
+    ], 200);
+});
